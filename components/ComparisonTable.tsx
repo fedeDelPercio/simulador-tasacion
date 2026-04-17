@@ -10,13 +10,19 @@ interface Props {
   surfaceCoefs: SurfaceCoefs;
 }
 
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
 function outlierFlags(values: (number | null)[], threshold: number): boolean[] {
   const valids = values.filter((v): v is number => v !== null && isFinite(v) && v > 0);
   if (valids.length < 2) return values.map(() => false);
-  const mean = valids.reduce((a, b) => a + b, 0) / valids.length;
-  if (mean === 0) return values.map(() => false);
+  const med = median(valids);
+  if (med === 0) return values.map(() => false);
   return values.map(
-    (v) => v !== null && isFinite(v) && v > 0 && Math.abs(v - mean) / mean > threshold
+    (v) => v !== null && isFinite(v) && v > 0 && Math.abs(v - med) / med > threshold
   );
 }
 
@@ -87,10 +93,10 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
     c.precio > 0 ? calcComparableDerived(c, surfaceCoefs) : null
   );
 
-  const supHomFlags  = outlierFlags(derived.map((d) => d?.supHom    ?? null), 0.40);
-  const valorM2Flags = outlierFlags(derived.map((d) => d?.valorM2   ?? null), 0.30);
-  const coefFlags    = outlierFlags(derived.map((d) => d?.coefTotal ?? null), 0.20);
-  const vumFlags     = outlierFlags(derived.map((d) => d?.vum       ?? null), 0.30);
+  const supHomFlags  = derived.map(() => false);
+  const valorM2Flags = derived.map(() => false);
+  const coefFlags    = derived.map(() => false);
+  const vumFlags     = outlierFlags(derived.map((d) => d?.vum ?? null), 0.30);
 
   const anyOutlier = comparables.some(
     (_, i) => supHomFlags[i] || valorM2Flags[i] || coefFlags[i] || vumFlags[i]

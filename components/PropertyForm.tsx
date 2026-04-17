@@ -128,23 +128,7 @@ export function PropertyForm({
           />
         </div>
 
-        {/* Row 3: Price */}
-        <div className="grid grid-cols-2 gap-3">
-          <NumInput
-            label="Precio (USD)"
-            value={property.precio ?? 0}
-            onChange={(v) => update({ precio: v })}
-            step="100"
-          />
-          <NumInput
-            label="Cochera (USD)"
-            value={property.cochera ?? 0}
-            onChange={(v) => update({ cochera: v })}
-            step="100"
-          />
-        </div>
-
-        {/* Row 4: Ubicación + Link */}
+        {/* Row 3: Ubicación + Link */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-neutral-500">Ubicación</label>
