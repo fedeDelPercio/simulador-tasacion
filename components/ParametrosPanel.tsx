@@ -48,8 +48,6 @@ export function ParametrosPanel({
           </p>
           <p className="text-xs text-neutral-400 mt-0.5">
             Coeficientes de ponderación de superficie
-            {customCoefDefs.length > 0 &&
-              ` · ${customCoefDefs.length} coef. personalizado${customCoefDefs.length > 1 ? "s" : ""}`}
           </p>
         </div>
         <svg
@@ -106,10 +104,10 @@ export function ParametrosPanel({
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-xs font-medium text-neutral-500">
-                  Coeficientes de homogeneización personalizados
+                  Coeficientes adicionales
                 </p>
                 <p className="text-[11px] text-neutral-400 mt-0.5">
-                  Se multiplican junto con los 10 coeficientes estándar en cada comparable.
+                  Se agregan a los coeficientes del tipo de inmueble seleccionado.
                 </p>
               </div>
             </div>

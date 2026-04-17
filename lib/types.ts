@@ -6,25 +6,54 @@ export interface SurfaceCoefs {
   balcon: number;
 }
 
-// ─── Homogenization coefficients (fixed set, one per comparable) ──────────────
-export interface HomogenizationCoefs {
-  ubicacion: number;
-  calidad: number;
-  antiguedad: number;
-  mantenimiento: number;
-  ubEdificio: number;
-  comodidades: number;
-  humedadSeco: number;
-  piso: number;
-  superficie: number;
-  coefOferta: number;
-}
-
 // ─── Custom homogenization coefficient definition (global, agent-defined) ────
 export interface CustomCoefDef {
   id: string;
   label: string;
 }
+
+// ─── Property types ──────────────────────────────────────────────────────────
+export type PropertyType = "departamento" | "ph" | "casa" | "casa_bc" | "local";
+
+export const PROPERTY_TYPE_LABELS: Record<PropertyType, string> = {
+  departamento: "Departamento",
+  casa: "Casa",
+  casa_bc: "Casa Barrio Cerrado",
+  ph: "PH",
+  local: "Local Comercial",
+};
+
+function makePreset(prefix: string, labels: string[]): CustomCoefDef[] {
+  return labels.map((label, i) => ({ id: `${prefix}_${i}`, label }));
+}
+
+export const PROPERTY_TYPE_COEF_PRESETS: Record<PropertyType, CustomCoefDef[]> = {
+  departamento: makePreset("dep", [
+    "Ubicación", "Antigüedad", "Calidad", "Mantenimiento",
+    "Ub. Edificio", "Distribución", "Hum/Seco", "Comodidades",
+    "Piso", "Superficie",
+  ]),
+  ph: makePreset("ph", [
+    "Ubicación", "Antigüedad", "Calidad", "Mantenimiento",
+    "Ub. En Lote", "Distribución", "Hum/Seco", "Comodidad",
+    "Esp. Libre", "Superficie", "Entrada", "Linderos",
+  ]),
+  casa: makePreset("casa", [
+    "Ubicación", "Antigüedad", "Calidad", "Mantenimiento",
+    "Esp. Libre", "Distribución", "Hum/Seco", "Comodidad",
+    "Lote", "Superficie", "Luminosidad", "Linderos",
+  ]),
+  casa_bc: makePreset("bc", [
+    "Ub. Lote", "Antigüedad", "Calidad", "Mantenimiento",
+    "Esp. Libre", "Distribución", "Hum/Seco", "Comodidad",
+    "Tipo Lote", "Sup. Cubierta", "Orientación", "Linderos",
+  ]),
+  local: makePreset("loc", [
+    "Ubicación", "Antigüedad", "Calidad", "Mantenimiento",
+    "Esp. Libre", "Distribución", "Hum/Seco", "Utilidad",
+    "Vidriera", "Superficie", "Ub. Cuadra", "PH",
+  ]),
+};
 
 // ─── A single comparable property ────────────────────────────────────────────
 export interface Comparable {
@@ -38,7 +67,7 @@ export interface Comparable {
   banos: number;
   precio: number;
   cochera: number;
-  coefs: HomogenizationCoefs;
+  coefOferta: number;
   customCoefs: Record<string, number>; // keyed by CustomCoefDef.id
   showCoefs: boolean;
 }
@@ -68,6 +97,7 @@ export interface AppState {
   cochera: number;
   showParametros: boolean;
   customCoefDefs: CustomCoefDef[];
+  propertyType: PropertyType;
 }
 
 // ─── Actions ─────────────────────────────────────────────────────────────────
@@ -77,18 +107,13 @@ export type AppAction =
   | { type: "ADD_COMPARABLE" }
   | { type: "REMOVE_COMPARABLE"; id: string }
   | { type: "UPDATE_COMPARABLE"; id: string; payload: Partial<Comparable> }
-  | {
-      type: "UPDATE_COMPARABLE_COEF";
-      id: string;
-      coef: keyof HomogenizationCoefs;
-      value: number;
-    }
   | { type: "UPDATE_COMPARABLE_CUSTOM_COEF"; id: string; coefId: string; value: number }
   | { type: "SET_COCHERA"; value: number }
   | { type: "TOGGLE_PARAMETROS" }
   | { type: "TOGGLE_COMPARABLE_COEFS"; id: string }
   | { type: "ADD_CUSTOM_COEF"; label: string }
-  | { type: "REMOVE_CUSTOM_COEF"; id: string };
+  | { type: "REMOVE_CUSTOM_COEF"; id: string }
+  | { type: "SET_PROPERTY_TYPE"; propertyType: PropertyType };
 
 // ─── Defaults ────────────────────────────────────────────────────────────────
 export const DEFAULT_SURFACE_COEFS: SurfaceCoefs = {
@@ -96,19 +121,6 @@ export const DEFAULT_SURFACE_COEFS: SurfaceCoefs = {
   semicubierta: 0.5,
   descubierta: 0.2,
   balcon: 0.33,
-};
-
-export const DEFAULT_HOMOGENIZATION_COEFS: HomogenizationCoefs = {
-  ubicacion: 1.0,
-  calidad: 1.0,
-  antiguedad: 1.0,
-  mantenimiento: 1.0,
-  ubEdificio: 1.0,
-  comodidades: 1.0,
-  humedadSeco: 1.0,
-  piso: 1.0,
-  superficie: 1.0,
-  coefOferta: 1.0,
 };
 
 export const TODAY_ISO = new Date().toISOString().split("T")[0];
@@ -130,11 +142,13 @@ export function createEmptyComparable(
     banos: 0,
     precio: 0,
     cochera: 0,
-    coefs: { ...DEFAULT_HOMOGENIZATION_COEFS },
+    coefOferta: 1.0,
     customCoefs,
     showCoefs: false,
   };
 }
+
+const INITIAL_PROPERTY_TYPE: PropertyType = "departamento";
 
 export const INITIAL_STATE: AppState = {
   property: {
@@ -156,19 +170,6 @@ export const INITIAL_STATE: AppState = {
   comparables: [],
   cochera: 0,
   showParametros: false,
-  customCoefDefs: [],
-};
-
-// ─── Label maps ──────────────────────────────────────────────────────────────
-export const HOMOGENIZATION_COEF_LABELS: Record<keyof HomogenizationCoefs, string> = {
-  ubicacion: "Ubicación",
-  calidad: "Calidad",
-  antiguedad: "Antigüedad",
-  mantenimiento: "Mantenimiento",
-  ubEdificio: "Ub. Edificio",
-  comodidades: "Comodidades",
-  humedadSeco: "Humedad/Seco",
-  piso: "Piso",
-  superficie: "Superficie",
-  coefOferta: "Coef. Oferta",
+  customCoefDefs: [...PROPERTY_TYPE_COEF_PRESETS[INITIAL_PROPERTY_TYPE]],
+  propertyType: INITIAL_PROPERTY_TYPE,
 };

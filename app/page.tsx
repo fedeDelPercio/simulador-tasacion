@@ -2,7 +2,7 @@
 
 import { useReducer } from "react";
 import type { AppAction, AppState } from "@/lib/types";
-import { INITIAL_STATE, createEmptyComparable } from "@/lib/types";
+import { INITIAL_STATE, PROPERTY_TYPE_COEF_PRESETS, createEmptyComparable } from "@/lib/types";
 import { calcVUMPromedio, calcSupHomogeneizada } from "@/lib/calculations";
 import { Header } from "@/components/Header";
 import { PropertyForm } from "@/components/PropertyForm";
@@ -48,16 +48,6 @@ function reducer(state: AppState, action: AppAction): AppState {
         ...state,
         comparables: state.comparables.map((c) =>
           c.id === action.id ? { ...c, ...action.payload } : c
-        ),
-      };
-
-    case "UPDATE_COMPARABLE_COEF":
-      return {
-        ...state,
-        comparables: state.comparables.map((c) =>
-          c.id === action.id
-            ? { ...c, coefs: { ...c.coefs, [action.coef]: action.value } }
-            : c
         ),
       };
 
@@ -109,6 +99,22 @@ function reducer(state: AppState, action: AppAction): AppState {
         }),
       };
 
+    case "SET_PROPERTY_TYPE": {
+      const newDefs = PROPERTY_TYPE_COEF_PRESETS[action.propertyType];
+      const defaultCoefs: Record<string, number> = {};
+      for (const def of newDefs) defaultCoefs[def.id] = 1.0;
+      return {
+        ...state,
+        propertyType: action.propertyType,
+        customCoefDefs: newDefs,
+        comparables: state.comparables.map((c) => ({
+          ...c,
+          coefOferta: 1.0,
+          customCoefs: { ...defaultCoefs },
+        })),
+      };
+    }
+
     default:
       return state;
   }
@@ -116,7 +122,7 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 export default function SimuladorPage() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const { property, comparables, cochera, showParametros, customCoefDefs } = state;
+  const { property, comparables, cochera, showParametros, customCoefDefs, propertyType } = state;
 
   const supHomInmueble = calcSupHomogeneizada(
     property.supCubierta,
@@ -162,7 +168,7 @@ export default function SimuladorPage() {
 
       <main className="max-w-5xl mx-auto px-6 py-8 space-y-6">
         {/* Section 1: Header data */}
-        <Header property={property} dispatch={dispatch} />
+        <Header property={property} propertyType={propertyType} dispatch={dispatch} />
 
         {/* Section 2: Global parameters (collapsible) */}
         <ParametrosPanel

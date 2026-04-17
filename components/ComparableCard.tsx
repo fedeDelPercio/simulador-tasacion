@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type {
-  AppAction,
-  Comparable,
-  CustomCoefDef,
-  HomogenizationCoefs,
-  SurfaceCoefs,
-} from "@/lib/types";
-import { HOMOGENIZATION_COEF_LABELS } from "@/lib/types";
+import type { AppAction, Comparable, CustomCoefDef, SurfaceCoefs } from "@/lib/types";
 import { calcComparableDerived, formatNumber } from "@/lib/calculations";
 
 interface ComparableCardProps {
@@ -198,10 +191,6 @@ export function ComparableCard({
       id: comparable.id,
       payload: { [key]: value },
     });
-  }
-
-  function updateCoef(coef: keyof HomogenizationCoefs, value: number) {
-    dispatch({ type: "UPDATE_COMPARABLE_COEF", id: comparable.id, coef, value });
   }
 
   function updateCustomCoef(coefId: string, value: number) {
@@ -430,42 +419,34 @@ export function ComparableCard({
                 <span>+20%</span>
               </div>
 
-              {/* Standard 10 coefs */}
+              {/* All coefs (preset + custom) */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-5">
-                {(
-                  Object.keys(
-                    HOMOGENIZATION_COEF_LABELS
-                  ) as (keyof HomogenizationCoefs)[]
-                ).map((key) => (
+                {customCoefDefs.map((def) => (
                   <CoefSlider
-                    key={key}
-                    label={HOMOGENIZATION_COEF_LABELS[key]}
-                    value={comparable.coefs[key]}
-                    onChange={(v) => updateCoef(key, v)}
+                    key={def.id}
+                    label={def.label}
+                    value={comparable.customCoefs[def.id] ?? 1}
+                    onChange={(v) => updateCustomCoef(def.id, v)}
                   />
                 ))}
               </div>
 
-              {/* Custom coefs */}
-              {customCoefDefs.length > 0 && (
-                <>
-                  <div className="border-t border-neutral-200 pt-4 mt-4">
-                    <p className="text-[10px] font-semibold text-neutral-400 uppercase tracking-widest mb-3">
-                      Personalizados
-                    </p>
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-5">
-                      {customCoefDefs.map((def) => (
-                        <CoefSlider
-                          key={def.id}
-                          label={def.label}
-                          value={comparable.customCoefs[def.id] ?? 1}
-                          onChange={(v) => updateCustomCoef(def.id, v)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
+              {/* Coef. Oferta — always present */}
+              <div className="border-t border-neutral-200 pt-4 mt-4">
+                <div className="w-40">
+                  <CoefSlider
+                    label="Coef. Oferta"
+                    value={comparable.coefOferta ?? 1}
+                    onChange={(v) =>
+                      dispatch({
+                        type: "UPDATE_COMPARABLE",
+                        id: comparable.id,
+                        payload: { coefOferta: v },
+                      })
+                    }
+                  />
+                </div>
+              </div>
 
               {/* Add custom coef inline */}
               <div className="mt-4 pt-3 border-t border-neutral-200 flex items-center justify-between">

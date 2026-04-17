@@ -1,8 +1,4 @@
-import type {
-  Comparable,
-  HomogenizationCoefs,
-  SurfaceCoefs,
-} from "./types";
+import type { Comparable, SurfaceCoefs } from "./types";
 
 // ─── Surface homogenization ───────────────────────────────────────────────────
 export function calcSupHomogeneizada(
@@ -29,25 +25,13 @@ export function calcValorM2(
   return precio / supHomogeneizada;
 }
 
-// ─── Total homogenization coefficient: fixed 10 × all custom coefs ───────────
+// ─── Total homogenization coefficient: coefOferta × all custom coefs ─────────
 export function calcCoefTotal(
-  coefs: HomogenizationCoefs,
+  coefOferta: number,
   customCoefs: Record<string, number> = {}
 ): number {
-  const base =
-    coefs.ubicacion *
-    coefs.calidad *
-    coefs.antiguedad *
-    coefs.mantenimiento *
-    coefs.ubEdificio *
-    coefs.comodidades *
-    coefs.humedadSeco *
-    coefs.piso *
-    coefs.superficie *
-    coefs.coefOferta;
-
   const custom = Object.values(customCoefs).reduce((acc, v) => acc * v, 1);
-  return base * custom;
+  return coefOferta * custom;
 }
 
 // ─── Homogenized unit market value ───────────────────────────────────────────
@@ -63,13 +47,7 @@ export function calcVUMPromedio(
   const validos = comparables.filter((c) => {
     if (c.precio <= 0) return false;
     const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-    const supHom = calcSupHomogeneizada(
-      c.supCubierta,
-      0,
-      0,
-      supBalcon,
-      surfaceCoefs
-    );
+    const supHom = calcSupHomogeneizada(c.supCubierta, 0, 0, supBalcon, surfaceCoefs);
     return supHom > 0;
   });
 
@@ -77,16 +55,10 @@ export function calcVUMPromedio(
 
   const sumaVUM = validos.reduce((sum, c) => {
     const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-    const supHom = calcSupHomogeneizada(
-      c.supCubierta,
-      0,
-      0,
-      supBalcon,
-      surfaceCoefs
-    );
+    const supHom = calcSupHomogeneizada(c.supCubierta, 0, 0, supBalcon, surfaceCoefs);
     const precioSinCochera = Math.max(0, c.precio - c.cochera);
     const valorM2 = calcValorM2(precioSinCochera, supHom);
-    const coefTotal = calcCoefTotal(c.coefs, c.customCoefs);
+    const coefTotal = calcCoefTotal(c.coefOferta, c.customCoefs);
     return sum + calcVUM(valorM2, coefTotal);
   }, 0);
 
@@ -112,21 +84,12 @@ export function formatNumber(value: number, decimals = 2): string {
 }
 
 // ─── Derived values for a single comparable ───────────────────────────────────
-export function calcComparableDerived(
-  c: Comparable,
-  surfaceCoefs: SurfaceCoefs
-) {
+export function calcComparableDerived(c: Comparable, surfaceCoefs: SurfaceCoefs) {
   const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-  const supHom = calcSupHomogeneizada(
-    c.supCubierta,
-    0,
-    0,
-    supBalcon,
-    surfaceCoefs
-  );
+  const supHom = calcSupHomogeneizada(c.supCubierta, 0, 0, supBalcon, surfaceCoefs);
   const precioSinCochera = Math.max(0, c.precio - c.cochera);
   const valorM2 = calcValorM2(precioSinCochera, supHom);
-  const coefTotal = calcCoefTotal(c.coefs, c.customCoefs);
+  const coefTotal = calcCoefTotal(c.coefOferta, c.customCoefs);
   const vum = calcVUM(valorM2, coefTotal);
   return { supHom, valorM2, coefTotal, vum };
 }
