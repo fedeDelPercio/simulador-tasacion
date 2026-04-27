@@ -10,6 +10,7 @@ export interface SurfaceCoefs {
 export interface CustomCoefDef {
   id: string;
   label: string;
+  isCustom?: boolean;
 }
 
 // ─── Property types ──────────────────────────────────────────────────────────

@@ -76,7 +76,7 @@ function reducer(state: AppState, action: AppAction): AppState {
       };
 
     case "ADD_CUSTOM_COEF": {
-      const newDef = { id: crypto.randomUUID(), label: action.label };
+      const newDef = { id: crypto.randomUUID(), label: action.label, isCustom: true };
       return {
         ...state,
         customCoefDefs: [...state.customCoefDefs, newDef],
@@ -275,7 +275,7 @@ export default function SimuladorPage() {
           </div>
 
           {comparables.length < MAX_COMPARABLES && (
-            <div className="mt-4 flex justify-center">
+            <div className="mt-4 flex justify-end">
               <button
                 onClick={() => dispatch({ type: "ADD_COMPARABLE" })}
                 className="flex items-center gap-2 px-5 py-2.5 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors"

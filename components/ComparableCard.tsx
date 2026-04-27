@@ -422,12 +422,25 @@ export function ComparableCard({
               {/* All coefs (preset + custom) */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-5">
                 {customCoefDefs.map((def) => (
-                  <CoefSlider
-                    key={def.id}
-                    label={def.label}
-                    value={comparable.customCoefs[def.id] ?? 1}
-                    onChange={(v) => updateCustomCoef(def.id, v)}
-                  />
+                  <div key={def.id} className="relative group">
+                    <CoefSlider
+                      label={def.label}
+                      value={comparable.customCoefs[def.id] ?? 1}
+                      onChange={(v) => updateCustomCoef(def.id, v)}
+                    />
+                    {def.isCustom && (
+                      <button
+                        onClick={() => dispatch({ type: "REMOVE_CUSTOM_COEF", id: def.id })}
+                        className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full bg-neutral-200 text-neutral-400 hover:bg-red-100 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                        title="Eliminar coeficiente"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-2.5 h-2.5">
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
 
