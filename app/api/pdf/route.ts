@@ -88,15 +88,15 @@ export async function POST(req: Request) {
   );
   const priceText = `USD ${totalValue.toLocaleString("es-AR")}`;
 
-  // Full-width white bar at calibrated position (y=710–802)
-  const boxY = 710;
-  const boxH = 92;
-  valuePage.drawRectangle({ x: 0, y: boxY, width: 810, height: boxH, color: rgb(1, 1, 1) });
+  // Celeste rectangle (pixel-sampled from reference): x=186, y=730, w=485, h=78
+  const CELESTE = rgb(0.925, 0.953, 0.988);
+  const boxX = 186, boxY = 700, boxW = 485, boxH = 110;
+  valuePage.drawRectangle({ x: boxX, y: boxY, width: boxW, height: boxH, color: CELESTE });
 
-  const priceSize = 26;
+  const priceSize = 36;
   const priceTextWidth = boldFont.widthOfTextAtSize(priceText, priceSize);
   valuePage.drawText(priceText, {
-    x: (810 - priceTextWidth) / 2,
+    x: boxX + (boxW - priceTextWidth) / 2,
     y: boxY + (boxH - priceSize) / 2 + 4,
     size: priceSize,
     font: boldFont,
