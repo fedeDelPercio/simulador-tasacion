@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #666; }
+  canvas { display: block; margin: 20px auto; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+  #status { color: white; font-family: sans-serif; padding: 16px; }
+</style>
+</head>
+<body>
+<div id="status">Loading...</div>
+<div id="container"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
+<script type="module">
+  import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs";
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
+
+  const PDF_URL = window.location.origin + "/pdf";
+  const container = document.getElementById("container");
+  const status = document.getElementById("status");
+
+  const loadingTask = pdfjsLib.getDocument(PDF_URL);
+  const pdf = await loadingTask.promise;
+  const numPages = pdf.numPages;
+  status.textContent = `Rendering ${numPages} pages...`;
+  document.title = `PDF:${numPages}`;
+
+  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const scale = 1.8;
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement("canvas");
+    canvas.id = `page-${pageNum}`;
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    container.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    canvas.setAttribute("data-rendered", "true");
+  }
+
+  status.textContent = `Done: ${numPages} pages rendered`;
+  document.title = `PDF:${numPages}:done`;
+</script>
+</body>
+</html>

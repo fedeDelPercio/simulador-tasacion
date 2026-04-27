@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import type { AppAction, AppState } from "@/lib/types";
 import { INITIAL_STATE, PROPERTY_TYPE_COEF_PRESETS, createEmptyComparable } from "@/lib/types";
 import { calcVUMPromedio, calcSupHomogeneizada } from "@/lib/calculations";
@@ -122,6 +122,35 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 export default function SimuladorPage() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [exportingPDF, setExportingPDF] = React.useState(false);
+
+  async function handleExportPDF() {
+    setExportingPDF(true);
+    try {
+      const res = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          property,
+          comparables,
+          customCoefDefs,
+          propertyType,
+          supHomInmueble,
+          vumAverage,
+          cochera,
+        }),
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `tasacion-${property.address || "informe"}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExportingPDF(false);
+    }
+  }
   const { property, comparables, cochera, showParametros, customCoefDefs, propertyType } = state;
 
   const supHomInmueble = calcSupHomogeneizada(
@@ -160,9 +189,25 @@ export default function SimuladorPage() {
             </h1>
             <p className="text-xs text-neutral-400">Análisis Comparativo de Mercado</p>
           </div>
-          <span className="ml-auto text-xs font-medium text-neutral-400 tracking-wider uppercase">
-            Team Scaglia
-          </span>
+          <div className="ml-auto flex items-center gap-4">
+            {comparables.length > 0 && (
+              <button
+                onClick={handleExportPDF}
+                disabled={exportingPDF}
+                className="flex items-center gap-2 px-4 py-2 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors disabled:opacity-50"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                {exportingPDF ? "Generando..." : "Exportar PDF"}
+              </button>
+            )}
+            <span className="text-xs font-medium text-neutral-400 tracking-wider uppercase">
+              Team Scaglia
+            </span>
+          </div>
         </div>
       </header>
 
