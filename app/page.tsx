@@ -316,6 +316,23 @@ export default function SimuladorPage() {
           />
         )}
 
+        {comparables.length > 0 && (
+          <div className="flex justify-center pb-2">
+            <button
+              onClick={handleExportPDF}
+              disabled={exportingPDF}
+              className="flex items-center gap-2 px-6 py-3 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors disabled:opacity-50 shadow-sm"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {exportingPDF ? "Generando..." : "Exportar PDF"}
+            </button>
+          </div>
+        )}
+
         <p className="text-xs text-neutral-400 leading-relaxed pb-8">
           Los coeficientes de homogeneización representan cómo es el inmueble
           tasado con respecto a cada comparable: =1 equivalente, &gt;1 el tasado
