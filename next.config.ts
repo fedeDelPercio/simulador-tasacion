@@ -1,10 +1,7 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const nextConfig: any = {
   experimental: {
-    outputFileTracingIncludes: {
-      "/api/pdf": ["./Ejemplo PDF ACM.pdf"],
-    },
+    outputFileTracingIncludes: { "/api/pdf": ["./Ejemplo PDF ACM.pdf"] },
   },
 };
 

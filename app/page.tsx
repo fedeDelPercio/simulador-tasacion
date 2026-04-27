@@ -232,32 +232,13 @@ export default function SimuladorPage() {
 
         {/* Section 4: Comparables */}
         <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-sm font-semibold text-brand-950">Comparables</h2>
-              {comparables.length > 0 && (
-                <p className="text-xs text-neutral-400 mt-0.5">
-                  {comparables.length} de {MAX_COMPARABLES} cargados
-                </p>
-              )}
-            </div>
-            <button
-              onClick={() => dispatch({ type: "ADD_COMPARABLE" })}
-              disabled={comparables.length >= MAX_COMPARABLES}
-              className="flex items-center gap-2 px-4 py-2 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                className="w-4 h-4"
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Agregar comparable
-            </button>
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-brand-950">Comparables</h2>
+            {comparables.length > 0 && (
+              <p className="text-xs text-neutral-400 mt-0.5">
+                {comparables.length} de {MAX_COMPARABLES} cargados
+              </p>
+            )}
           </div>
 
           {comparables.length === 0 && (
@@ -292,6 +273,27 @@ export default function SimuladorPage() {
               />
             ))}
           </div>
+
+          {comparables.length < MAX_COMPARABLES && (
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={() => dispatch({ type: "ADD_COMPARABLE" })}
+                className="flex items-center gap-2 px-5 py-2.5 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  className="w-4 h-4"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Agregar comparable
+              </button>
+            </div>
+          )}
         </section>
 
         {/* Section 5: Comparison table */}

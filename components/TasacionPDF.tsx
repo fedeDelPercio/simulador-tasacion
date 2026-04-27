@@ -253,7 +253,7 @@ function TablesPage({
           property.supDescubierta +
           property.supBalcon
       ),
-      getComp: (c) => formatNumber(c.supTotal),
+      getComp: (c) => formatNumber(c.supCubierta + c.supSemiCubierta + c.supDescubierta + c.supBalcon),
     },
     {
       label: "Sup. Cubierta (m²)",

@@ -60,8 +60,10 @@ export interface Comparable {
   id: string;
   ubicacion: string;
   link: string;
-  supTotal: number;
   supCubierta: number;
+  supSemiCubierta: number;
+  supDescubierta: number;
+  supBalcon: number;
   ambientes: number;
   dormitorios: number;
   banos: number;
@@ -135,8 +137,10 @@ export function createEmptyComparable(
     id,
     ubicacion: "",
     link: "",
-    supTotal: 0,
     supCubierta: 0,
+    supSemiCubierta: 0,
+    supDescubierta: 0,
+    supBalcon: 0,
     ambientes: 0,
     dormitorios: 0,
     banos: 0,

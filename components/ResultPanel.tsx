@@ -22,8 +22,7 @@ export function ResultPanel({
 }: ResultPanelProps) {
   const validCount = comparables.filter((c) => {
     if (c.precio <= 0) return false;
-    const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-    const supHom = c.supCubierta * surfaceCoefs.cubierta + supBalcon * surfaceCoefs.balcon;
+    const supHom = c.supCubierta * surfaceCoefs.cubierta + c.supSemiCubierta * surfaceCoefs.semicubierta + c.supDescubierta * surfaceCoefs.descubierta + c.supBalcon * surfaceCoefs.balcon;
     return supHom > 0;
   }).length;
 

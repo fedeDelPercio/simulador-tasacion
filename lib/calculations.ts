@@ -46,16 +46,14 @@ export function calcVUMPromedio(
 ): number {
   const validos = comparables.filter((c) => {
     if (c.precio <= 0) return false;
-    const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-    const supHom = calcSupHomogeneizada(c.supCubierta, 0, 0, supBalcon, surfaceCoefs);
+    const supHom = calcSupHomogeneizada(c.supCubierta, c.supSemiCubierta, c.supDescubierta, c.supBalcon, surfaceCoefs);
     return supHom > 0;
   });
 
   if (validos.length === 0) return 0;
 
   const sumaVUM = validos.reduce((sum, c) => {
-    const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-    const supHom = calcSupHomogeneizada(c.supCubierta, 0, 0, supBalcon, surfaceCoefs);
+    const supHom = calcSupHomogeneizada(c.supCubierta, c.supSemiCubierta, c.supDescubierta, c.supBalcon, surfaceCoefs);
     const precioSinCochera = Math.max(0, c.precio - c.cochera);
     const valorM2 = calcValorM2(precioSinCochera, supHom);
     const coefTotal = calcCoefTotal(c.coefOferta, c.customCoefs);
@@ -85,8 +83,7 @@ export function formatNumber(value: number, decimals = 2): string {
 
 // ─── Derived values for a single comparable ───────────────────────────────────
 export function calcComparableDerived(c: Comparable, surfaceCoefs: SurfaceCoefs) {
-  const supBalcon = Math.max(0, c.supTotal - c.supCubierta);
-  const supHom = calcSupHomogeneizada(c.supCubierta, 0, 0, supBalcon, surfaceCoefs);
+  const supHom = calcSupHomogeneizada(c.supCubierta, c.supSemiCubierta, c.supDescubierta, c.supBalcon, surfaceCoefs);
   const precioSinCochera = Math.max(0, c.precio - c.cochera);
   const valorM2 = calcValorM2(precioSinCochera, supHom);
   const coefTotal = calcCoefTotal(c.coefOferta, c.customCoefs);

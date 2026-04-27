@@ -244,7 +244,7 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
                   {c.ambientes || "—"}
                 </td>
                 <td className="px-4 py-3 text-right text-neutral-500 text-xs tabular-nums">
-                  {c.supTotal > 0 ? `${formatNumber(c.supTotal)} m²` : "—"}
+                  {c.supCubierta > 0 ? `${formatNumber(c.supCubierta + c.supSemiCubierta + c.supDescubierta + c.supBalcon)} m²` : "—"}
                 </td>
                 <td className="px-4 py-3 text-right text-neutral-500 text-xs tabular-nums">
                   {c.precio > 0

@@ -300,13 +300,7 @@ export function ComparableCard({
         </div>
 
         {/* Row 1: Surfaces */}
-        <div className="grid grid-cols-3 gap-3">
-          <NumInput
-            label="Sup. Total (m²)"
-            value={comparable.supTotal}
-            onChange={(v) => updateField("supTotal", v)}
-            step="0.01"
-          />
+        <div className="grid grid-cols-4 gap-3">
           <NumInput
             label="Sup. Cubierta (m²)"
             value={comparable.supCubierta}
@@ -314,18 +308,24 @@ export function ComparableCard({
             required
             step="0.01"
           />
-          {/* Sup. Balcón — calculada automáticamente */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-neutral-400">
-              Sup. Balcón (m²)
-              <span className="ml-1 text-[10px] font-normal text-neutral-300">auto</span>
-            </label>
-            <div className="px-2 py-1.5 border border-neutral-100 rounded-lg text-sm text-neutral-400 bg-neutral-50 tabular-nums">
-              {comparable.supTotal > comparable.supCubierta
-                ? (comparable.supTotal - comparable.supCubierta).toFixed(2)
-                : "—"}
-            </div>
-          </div>
+          <NumInput
+            label="Sup. Semicubierta (m²)"
+            value={comparable.supSemiCubierta}
+            onChange={(v) => updateField("supSemiCubierta", v)}
+            step="0.01"
+          />
+          <NumInput
+            label="Sup. Descubierta (m²)"
+            value={comparable.supDescubierta}
+            onChange={(v) => updateField("supDescubierta", v)}
+            step="0.01"
+          />
+          <NumInput
+            label="Sup. Balcón (m²)"
+            value={comparable.supBalcon}
+            onChange={(v) => updateField("supBalcon", v)}
+            step="0.01"
+          />
         </div>
 
         {/* Row 2: Rooms */}
