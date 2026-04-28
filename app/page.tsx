@@ -319,11 +319,11 @@ export default function SimuladorPage() {
         )}
 
         {comparables.length > 0 && (
-          <div className="flex justify-center pb-2">
+          <div className="flex justify-end pb-2">
             <button
               onClick={handleExportPDF}
               disabled={exportingPDF}
-              className="flex items-center gap-2 px-6 py-3 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors disabled:opacity-50 shadow-sm"
+              className="flex items-center gap-2 px-5 py-2.5 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors disabled:opacity-50"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />

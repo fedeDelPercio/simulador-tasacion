@@ -20,48 +20,68 @@ function CoefSlider({
   label,
   value,
   onChange,
+  onDelete,
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
+  onDelete?: () => void;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+
   const pct = Math.round((value - 1) * 100);
   const thumbPos = ((value - COEF_MIN) / (COEF_MAX - COEF_MIN)) * 100;
   const isNeutral = Math.abs(value - 1) < 0.005;
   const isAbove = value > 1.005;
 
-  // Fill bar: always starts at 50% (center = 1.0)
   const fillLeft = isAbove ? 50 : thumbPos;
   const fillWidth = Math.abs(thumbPos - 50);
 
+  const valueColor = isNeutral ? "text-neutral-400" : isAbove ? "text-brand-700" : "text-accent-500";
+
+  function commitEdit(raw: string) {
+    const parsed = parseFloat(raw.replace(",", "."));
+    if (!isNaN(parsed)) {
+      onChange(Math.min(COEF_MAX, Math.max(COEF_MIN, parsed)));
+    }
+    setEditing(false);
+  }
+
   return (
     <div className="flex flex-col gap-1">
-      {/* Label + % badge */}
-      <div className="flex items-center justify-between">
-        <label className="text-[10px] font-medium text-neutral-400 leading-tight">
-          {label}
-        </label>
+      {/* Label row */}
+      <div className="flex items-center justify-between gap-1">
+        <div className="flex items-center gap-1 min-w-0">
+          <label className="text-[10px] font-medium text-neutral-400 leading-tight truncate">
+            {label}
+          </label>
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="flex-shrink-0 w-3.5 h-3.5 flex items-center justify-center rounded-full text-neutral-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+              title="Eliminar coeficiente"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-2 h-2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+        </div>
         <span
-          className={`text-[10px] font-semibold tabular-nums ${
-            isNeutral
-              ? "text-neutral-300"
-              : isAbove
-              ? "text-brand-700"
-              : "text-accent-500"
+          className={`flex-shrink-0 text-[10px] font-semibold tabular-nums ${
+            isNeutral ? "text-neutral-300" : isAbove ? "text-brand-700" : "text-accent-500"
           }`}
         >
-          {pct > 0 ? "+" : ""}
-          {pct}%
+          {pct > 0 ? "+" : ""}{pct}%
         </span>
       </div>
 
       {/* Track + thumb */}
       <div className="relative h-6 flex items-center select-none">
-        {/* Background track */}
         <div className="w-full h-1 bg-neutral-200 rounded-full relative overflow-visible">
-          {/* Center tick mark */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-3 bg-neutral-300" />
-          {/* Fill from center */}
           {!isNeutral && (
             <div
               className="absolute top-0 h-full rounded-full"
@@ -73,8 +93,6 @@ function CoefSlider({
             />
           )}
         </div>
-
-        {/* Invisible native range input (handles interaction) */}
         <input
           type="range"
           min={COEF_MIN}
@@ -84,32 +102,40 @@ function CoefSlider({
           onChange={(e) => onChange(parseFloat(e.target.value))}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
-
-        {/* Custom thumb */}
         <div
           className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 bg-white pointer-events-none shadow-sm transition-colors ${
-            isNeutral
-              ? "border-neutral-300"
-              : isAbove
-              ? "border-brand-700"
-              : "border-accent-500"
+            isNeutral ? "border-neutral-300" : isAbove ? "border-brand-700" : "border-accent-500"
           }`}
           style={{ left: `${thumbPos}%` }}
         />
       </div>
 
-      {/* Numeric value */}
-      <p
-        className={`text-center text-[11px] font-semibold tabular-nums ${
-          isNeutral
-            ? "text-neutral-400"
-            : isAbove
-            ? "text-brand-700"
-            : "text-accent-500"
-        }`}
-      >
-        {value.toFixed(2)}
-      </p>
+      {/* Numeric value — tap/click to edit directly */}
+      {editing ? (
+        <input
+          type="number"
+          min={COEF_MIN}
+          max={COEF_MAX}
+          step="0.01"
+          value={draft}
+          autoFocus
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={(e) => commitEdit(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") commitEdit((e.target as HTMLInputElement).value);
+            if (e.key === "Escape") setEditing(false);
+          }}
+          className={`text-center text-[11px] font-semibold tabular-nums w-full bg-transparent border-b border-current focus:outline-none ${valueColor}`}
+        />
+      ) : (
+        <button
+          onClick={() => { setDraft(value.toFixed(2)); setEditing(true); }}
+          className={`text-center text-[11px] font-semibold tabular-nums w-full ${valueColor}`}
+          title="Tocar para editar"
+        >
+          {value.toFixed(2)}
+        </button>
+      )}
     </div>
   );
 }
@@ -422,25 +448,13 @@ export function ComparableCard({
               {/* All coefs (preset + custom) */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-5">
                 {customCoefDefs.map((def) => (
-                  <div key={def.id} className="relative group">
-                    <CoefSlider
-                      label={def.label}
-                      value={comparable.customCoefs[def.id] ?? 1}
-                      onChange={(v) => updateCustomCoef(def.id, v)}
-                    />
-                    {def.isCustom && (
-                      <button
-                        onClick={() => dispatch({ type: "REMOVE_CUSTOM_COEF", id: def.id })}
-                        className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full bg-neutral-200 text-neutral-400 hover:bg-red-100 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
-                        title="Eliminar coeficiente"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-2.5 h-2.5">
-                          <line x1="18" y1="6" x2="6" y2="18" />
-                          <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
+                  <CoefSlider
+                    key={def.id}
+                    label={def.label}
+                    value={comparable.customCoefs[def.id] ?? 1}
+                    onChange={(v) => updateCustomCoef(def.id, v)}
+                    onDelete={def.isCustom ? () => dispatch({ type: "REMOVE_CUSTOM_COEF", id: def.id }) : undefined}
+                  />
                 ))}
               </div>
 
