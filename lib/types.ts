@@ -149,7 +149,7 @@ export function createEmptyComparable(
     cochera: 0,
     coefOferta: 1.0,
     customCoefs,
-    showCoefs: false,
+    showCoefs: true,
   };
 }
 
