@@ -17,6 +17,8 @@ export function ParametrosPanel({
   dispatch,
 }: ParametrosPanelProps) {
   const [newLabel, setNewLabel] = useState("");
+  const [editingSurface, setEditingSurface] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   function handleAdd() {
     const label = newLabel.trim();
@@ -24,6 +26,13 @@ export function ParametrosPanel({
     dispatch({ type: "ADD_CUSTOM_COEF", label });
     setNewLabel("");
   }
+
+  const surfaceFields = [
+    ["Cubierta", "cubierta"],
+    ["Semicubierta", "semicubierta"],
+    ["Descubierta", "descubierta"],
+    ["Balcón", "balcon"],
+  ] as const;
 
   return (
     <section className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
@@ -67,33 +76,68 @@ export function ParametrosPanel({
         <div className="px-6 pb-6 space-y-6 border-t border-neutral-100">
           {/* ── Surface coefficients ── */}
           <div className="pt-5">
-            <p className="text-xs font-medium text-neutral-500 mb-3">
-              Ponderación de superficies
-            </p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-medium text-neutral-500">
+                Ponderación de superficies
+              </p>
+              {!editingSurface ? (
+                <button
+                  onClick={() => setConfirmOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-200 text-neutral-600 text-xs font-medium rounded-lg hover:bg-neutral-50 transition-colors"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-3.5 h-3.5"
+                  >
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z" />
+                  </svg>
+                  Modificar
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditingSurface(false)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-950 text-white text-xs font-medium rounded-lg hover:bg-brand-800 transition-colors"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    className="w-3.5 h-3.5"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Listo
+                </button>
+              )}
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {(
-                [
-                  ["Cubierta", "cubierta"],
-                  ["Semicubierta", "semicubierta"],
-                  ["Descubierta", "descubierta"],
-                  ["Balcón", "balcon"],
-                ] as const
-              ).map(([label, key]) => (
+              {surfaceFields.map(([label, key]) => (
                 <div key={key} className="flex flex-col gap-1.5">
                   <label className="text-xs text-neutral-400">{label}</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={surfaceCoefs[key]}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "UPDATE_SURFACE_COEFS",
-                        payload: { [key]: parseFloat(e.target.value) || 0 },
-                      })
-                    }
-                    className="px-3 py-2 border border-neutral-200 rounded-lg text-sm text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-800 focus:border-transparent transition"
-                  />
+                  {editingSurface ? (
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={surfaceCoefs[key]}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "UPDATE_SURFACE_COEFS",
+                          payload: { [key]: parseFloat(e.target.value) || 0 },
+                        })
+                      }
+                      className="px-3 py-2 border border-neutral-200 rounded-lg text-sm text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand-800 focus:border-transparent transition"
+                    />
+                  ) : (
+                    <div className="px-3 py-2 border border-neutral-100 bg-neutral-50 rounded-lg text-sm font-medium text-neutral-800">
+                      {surfaceCoefs[key]}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -170,6 +214,55 @@ export function ParametrosPanel({
                   <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
                 Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Confirm modal ── */}
+      {confirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="w-5 h-5 text-amber-500"
+                >
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-neutral-800">
+                  ¿Seguro que querés modificar las ponderaciones de superficie?
+                </h3>
+                <p className="text-xs text-neutral-500 mt-1.5">
+                  Estos valores afectan el cálculo de la tasación. Modificalos
+                  solo si estás seguro.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                onClick={() => setConfirmOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-neutral-600 rounded-lg hover:bg-neutral-100 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  setEditingSurface(true);
+                  setConfirmOpen(false);
+                }}
+                className="px-4 py-2 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors"
+              >
+                Sí, modificar
               </button>
             </div>
           </div>
