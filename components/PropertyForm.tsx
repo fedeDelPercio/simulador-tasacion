@@ -115,7 +115,7 @@ export function PropertyForm({
         </div>
 
         {/* Row 2: Rooms */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <NumInput
             label="Ambientes"
             value={property.ambientes ?? 0}
@@ -130,6 +130,11 @@ export function PropertyForm({
             label="Baños"
             value={property.banos ?? 0}
             onChange={(v) => update({ banos: v })}
+          />
+          <NumInput
+            label="Toilete"
+            value={property.toilete ?? 0}
+            onChange={(v) => update({ toilete: v })}
           />
         </div>
 

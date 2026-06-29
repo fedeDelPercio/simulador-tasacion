@@ -377,7 +377,7 @@ export function ComparableCard({
         </div>
 
         {/* Row 2: Rooms */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <NumInput
             label="Ambientes"
             value={comparable.ambientes}
@@ -392,6 +392,11 @@ export function ComparableCard({
             label="Baños"
             value={comparable.banos}
             onChange={(v) => updateField("banos", v)}
+          />
+          <NumInput
+            label="Toilete"
+            value={comparable.toilete}
+            onChange={(v) => updateField("toilete", v)}
           />
         </div>
 

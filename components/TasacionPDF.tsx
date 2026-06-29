@@ -276,6 +276,11 @@ function TablesPage({
       getComp: (c) => (c.banos ? String(c.banos) : "—"),
     },
     {
+      label: "Toilete",
+      subject: property.toilete ? String(property.toilete) : "—",
+      getComp: (c) => (c.toilete ? String(c.toilete) : "—"),
+    },
+    {
       label: "Precio",
       subject: "—",
       getComp: (c) => (c.precio ? `USD ${c.precio.toLocaleString("es-AR")}` : "—"),

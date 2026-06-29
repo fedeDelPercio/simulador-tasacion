@@ -68,6 +68,7 @@ export interface Comparable {
   ambientes: number;
   dormitorios: number;
   banos: number;
+  toilete: number;
   precio: number;
   cochera: number;
   coefOferta: number;
@@ -88,6 +89,7 @@ export interface PropertyData {
   ambientes: number;
   dormitorios: number;
   banos: number;
+  toilete: number;
   precio: number;
   cochera: number;
   surfaceCoefs: SurfaceCoefs;
@@ -145,6 +147,7 @@ export function createEmptyComparable(
     ambientes: 0,
     dormitorios: 0,
     banos: 0,
+    toilete: 0,
     precio: 0,
     cochera: 0,
     coefOferta: 1.0,
@@ -168,6 +171,7 @@ export const INITIAL_STATE: AppState = {
     ambientes: 0,
     dormitorios: 0,
     banos: 0,
+    toilete: 0,
     precio: 0,
     cochera: 0,
     surfaceCoefs: { ...DEFAULT_SURFACE_COEFS },
