@@ -88,7 +88,7 @@ function CoefSlider({
               style={{
                 left: `${fillLeft}%`,
                 width: `${fillWidth}%`,
-                backgroundColor: isAbove ? "#334155" : "#d97706",
+                backgroundColor: isAbove ? "#253C64" : "#626970",
               }}
             />
           )}

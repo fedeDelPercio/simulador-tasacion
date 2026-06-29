@@ -166,13 +166,13 @@ export default function SimuladorPage() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Site header */}
-      <header className="bg-brand-800 border-b-2 border-accent-500">
+      <header className="bg-brand-800 border-b border-white/10">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-          <div className="w-8 h-8 bg-accent-500 rounded-md flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 bg-white/10 border border-white/20 rounded-md flex items-center justify-center flex-shrink-0">
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#1a2847"
+              stroke="white"
               strokeWidth="2.2"
               className="w-4 h-4"
             >
@@ -194,7 +194,7 @@ export default function SimuladorPage() {
               <button
                 onClick={handleExportPDF}
                 disabled={exportingPDF}
-                className="flex items-center gap-2 px-4 py-2 bg-accent-500 text-brand-950 text-sm font-semibold rounded-lg hover:bg-accent-600 transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
@@ -204,7 +204,7 @@ export default function SimuladorPage() {
                 {exportingPDF ? "Generando..." : "Exportar PDF"}
               </button>
             )}
-            <span className="text-xs font-semibold text-accent-500 tracking-widest uppercase">
+            <span className="text-xs font-semibold text-brand-400 tracking-widest uppercase">
               Team Scaglia
             </span>
           </div>

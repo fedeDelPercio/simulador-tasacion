@@ -14,10 +14,10 @@
   --color-brand-100: #e6ebf1;
   --color-brand-50:  #f8f7f5;
 
-  /* Interactive accent — Team Scaglia gold */
-  --color-accent-600: #c8901f;
-  --color-accent-500: #e0a92e;
-  --color-accent-100: #f7ecd0;
+  /* Accent — Team Scaglia gris acento (sin dorado, segun manual de marca) */
+  --color-accent-600: #4f555f;
+  --color-accent-500: #626970;
+  --color-accent-100: #e7e9eb;
 
   /* Neutrals */
   --color-neutral-50:  #f9fafb;
