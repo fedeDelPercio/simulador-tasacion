@@ -18,6 +18,10 @@ interface ComparableCardProps {
 
 const COEF_MIN = 0.8;
 const COEF_MAX = 1.2;
+// Colores del slider de coeficientes (funcionales, no de marca):
+// sube = azul marino · baja = naranja
+const COEF_UP = "#253C64";
+const COEF_DOWN = "#e07b2e";
 
 function CoefSlider({
   label,
@@ -41,7 +45,7 @@ function CoefSlider({
   const fillLeft = isAbove ? 50 : thumbPos;
   const fillWidth = Math.abs(thumbPos - 50);
 
-  const valueColor = isNeutral ? "text-neutral-600" : isAbove ? "text-brand-700" : "text-accent-500";
+  const valueColor = isNeutral ? "text-neutral-600" : isAbove ? "text-brand-700" : "text-[#e07b2e]";
 
   function commitEdit(raw: string) {
     const parsed = parseFloat(raw.replace(",", "."));
@@ -74,7 +78,7 @@ function CoefSlider({
         </div>
         <span
           className={`flex-shrink-0 text-[10px] font-semibold tabular-nums ${
-            isNeutral ? "text-neutral-500" : isAbove ? "text-brand-700" : "text-accent-500"
+            isNeutral ? "text-neutral-500" : isAbove ? "text-brand-700" : "text-[#e07b2e]"
           }`}
         >
           {pct > 0 ? "+" : ""}{pct}%
@@ -91,7 +95,7 @@ function CoefSlider({
               style={{
                 left: `${fillLeft}%`,
                 width: `${fillWidth}%`,
-                backgroundColor: isAbove ? "#253C64" : "#626970",
+                backgroundColor: isAbove ? COEF_UP : COEF_DOWN,
               }}
             />
           )}
@@ -107,9 +111,12 @@ function CoefSlider({
         />
         <div
           className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 bg-white pointer-events-none shadow-sm transition-colors ${
-            isNeutral ? "border-neutral-300" : isAbove ? "border-brand-700" : "border-accent-500"
+            isNeutral ? "border-neutral-300" : isAbove ? "border-brand-700" : ""
           }`}
-          style={{ left: `${thumbPos}%` }}
+          style={{
+            left: `${thumbPos}%`,
+            ...(!isNeutral && !isAbove ? { borderColor: COEF_DOWN } : {}),
+          }}
         />
       </div>
 
