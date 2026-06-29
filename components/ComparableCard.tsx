@@ -41,7 +41,7 @@ function CoefSlider({
   const fillLeft = isAbove ? 50 : thumbPos;
   const fillWidth = Math.abs(thumbPos - 50);
 
-  const valueColor = isNeutral ? "text-neutral-400" : isAbove ? "text-brand-700" : "text-accent-500";
+  const valueColor = isNeutral ? "text-neutral-600" : isAbove ? "text-brand-700" : "text-accent-500";
 
   function commitEdit(raw: string) {
     const parsed = parseFloat(raw.replace(",", "."));
@@ -56,7 +56,7 @@ function CoefSlider({
       {/* Label row */}
       <div className="flex items-center justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
-          <label className="text-[10px] font-medium text-neutral-400 leading-tight truncate">
+          <label className="text-[10px] font-semibold text-neutral-700 leading-tight truncate">
             {label}
           </label>
           {onDelete && (
@@ -74,7 +74,7 @@ function CoefSlider({
         </div>
         <span
           className={`flex-shrink-0 text-[10px] font-semibold tabular-nums ${
-            isNeutral ? "text-neutral-300" : isAbove ? "text-brand-700" : "text-accent-500"
+            isNeutral ? "text-neutral-500" : isAbove ? "text-brand-700" : "text-accent-500"
           }`}
         >
           {pct > 0 ? "+" : ""}{pct}%
@@ -476,7 +476,7 @@ export function ComparableCard({
           {comparable.showCoefs && (
             <div className="mt-3 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
               {/* Range labels */}
-              <div className="flex justify-between text-[9px] text-neutral-400 mb-3 px-0.5">
+              <div className="flex justify-between text-[9px] text-neutral-500 mb-3 px-0.5">
                 <span>−20%</span>
                 <span className="font-medium">neutro</span>
                 <span>+20%</span>
@@ -514,7 +514,7 @@ export function ComparableCard({
 
               {/* Add custom coef inline */}
               <div className="mt-4 pt-3 border-t border-neutral-200 flex items-center justify-between">
-                <p className="text-[10px] text-neutral-400">
+                <p className="text-[10px] font-medium text-neutral-600">
                   Coef. Total = {formatNumber(coefTotal, 4)}
                 </p>
                 {addingCoef ? (
@@ -551,7 +551,7 @@ export function ComparableCard({
                 ) : (
                   <button
                     onClick={() => setAddingCoef(true)}
-                    className="flex items-center gap-1 text-[11px] text-neutral-400 hover:text-brand-800 transition-colors"
+                    className="flex items-center gap-1 text-[11px] font-medium text-neutral-600 hover:text-brand-800 transition-colors"
                     title="Agregar coeficiente personalizado"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3 h-3">
