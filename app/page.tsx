@@ -269,6 +269,7 @@ export default function SimuladorPage() {
                 vumAverage={vumAverage}
                 surfaceCoefs={property.surfaceCoefs}
                 customCoefDefs={customCoefDefs}
+                propertyAmbientes={property.ambientes ?? 0}
                 dispatch={dispatch}
               />
             ))}

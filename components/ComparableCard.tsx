@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { AppAction, Comparable, CustomCoefDef, SurfaceCoefs } from "@/lib/types";
 import { calcComparableDerived, formatNumber } from "@/lib/calculations";
+import { ValidationAlert } from "./ValidationAlert";
 
 interface ComparableCardProps {
   comparable: Comparable;
@@ -10,6 +11,8 @@ interface ComparableCardProps {
   vumAverage: number;
   surfaceCoefs: SurfaceCoefs;
   customCoefDefs: CustomCoefDef[];
+  /** Ambientes del bien a tasar, para validar coincidencia */
+  propertyAmbientes: number;
   dispatch: React.Dispatch<AppAction>;
 }
 
@@ -186,10 +189,22 @@ export function ComparableCard({
   vumAverage,
   surfaceCoefs,
   customCoefDefs,
+  propertyAmbientes,
   dispatch,
 }: ComparableCardProps) {
   const [newCoefLabel, setNewCoefLabel] = useState("");
   const [addingCoef, setAddingCoef] = useState(false);
+  // Valor de ambientes confirmado como "a propósito" (para silenciar la alerta de no coincidencia)
+  const [ackAmbientes, setAckAmbientes] = useState<number | null>(null);
+
+  // ── Validaciones ──
+  const ambientesMismatch =
+    propertyAmbientes > 0 &&
+    comparable.ambientes > 0 &&
+    comparable.ambientes !== propertyAmbientes;
+  const showAmbMismatch = ambientesMismatch && ackAmbientes !== comparable.ambientes;
+  const dormGtAmb =
+    comparable.ambientes > 0 && comparable.dormitorios > comparable.ambientes;
 
   function handleAddCustomCoef() {
     const label = newCoefLabel.trim();
@@ -372,6 +387,28 @@ export function ComparableCard({
             onChange={(v) => updateField("banos", v)}
           />
         </div>
+
+        {/* Validaciones de ambientes / dormitorios */}
+        {(showAmbMismatch || dormGtAmb) && (
+          <div className="space-y-2">
+            {showAmbMismatch && (
+              <ValidationAlert
+                variant="warning"
+                message={`Este comparable tiene ${comparable.ambientes} ambiente${
+                  comparable.ambientes === 1 ? "" : "s"
+                } y no coincide con el bien a tasar (${propertyAmbientes}). Verificá que sea a propósito.`}
+                confirmLabel="Es a propósito"
+                onConfirm={() => setAckAmbientes(comparable.ambientes)}
+              />
+            )}
+            {dormGtAmb && (
+              <ValidationAlert
+                variant="error"
+                message={`No puede tener más dormitorios (${comparable.dormitorios}) que ambientes (${comparable.ambientes}). Revisá los valores.`}
+              />
+            )}
+          </div>
+        )}
 
         {/* Row 3: Price */}
         <div className="grid grid-cols-2 gap-3">
