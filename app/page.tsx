@@ -226,6 +226,7 @@ export default function SimuladorPage() {
         {/* Section 3: Property surfaces */}
         <PropertyForm
           property={property}
+          propertyType={propertyType}
           supHomInmueble={supHomInmueble}
           dispatch={dispatch}
         />
@@ -270,6 +271,7 @@ export default function SimuladorPage() {
                 surfaceCoefs={property.surfaceCoefs}
                 customCoefDefs={customCoefDefs}
                 propertyAmbientes={property.ambientes ?? 0}
+                propertyType={propertyType}
                 dispatch={dispatch}
               />
             ))}

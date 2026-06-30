@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { AppAction, PropertyData } from "@/lib/types";
+import type { AppAction, PropertyData, PropertyType } from "@/lib/types";
 import { formatNumber, roomsError } from "@/lib/calculations";
 import { ValidationAlert } from "./ValidationAlert";
 
@@ -33,6 +33,7 @@ function fileToResizedDataURL(file: File, maxSize = 1280): Promise<string> {
 
 interface PropertyFormProps {
   property: PropertyData;
+  propertyType: PropertyType;
   supHomInmueble: number;
   dispatch: React.Dispatch<AppAction>;
 }
@@ -77,10 +78,12 @@ function NumInput({
 
 export function PropertyForm({
   property,
+  propertyType,
   supHomInmueble,
   dispatch,
 }: PropertyFormProps) {
   const { surfaceCoefs } = property;
+  const isLocal = propertyType === "local";
 
   const dormError = roomsError(property.ambientes ?? 0, property.dormitorios ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -159,11 +162,13 @@ export function PropertyForm({
             value={property.ambientes ?? 0}
             onChange={(v) => update({ ambientes: v })}
           />
-          <NumInput
-            label="Dormitorios"
-            value={property.dormitorios ?? 0}
-            onChange={(v) => update({ dormitorios: v })}
-          />
+          {!isLocal && (
+            <NumInput
+              label="Dormitorios"
+              value={property.dormitorios ?? 0}
+              onChange={(v) => update({ dormitorios: v })}
+            />
+          )}
           <NumInput
             label="Baños"
             value={property.banos ?? 0}

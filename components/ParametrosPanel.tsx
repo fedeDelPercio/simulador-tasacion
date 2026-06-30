@@ -19,6 +19,7 @@ export function ParametrosPanel({
   const [newLabel, setNewLabel] = useState("");
   const [editingSurface, setEditingSurface] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [coefToDelete, setCoefToDelete] = useState<CustomCoefDef | null>(null);
 
   function handleAdd() {
     const label = newLabel.trim();
@@ -166,9 +167,7 @@ export function ParametrosPanel({
                   >
                     <span>{def.label}</span>
                     <button
-                      onClick={() =>
-                        dispatch({ type: "REMOVE_CUSTOM_COEF", id: def.id })
-                      }
+                      onClick={() => setCoefToDelete(def)}
                       className="text-neutral-400 hover:text-red-400 transition-colors ml-1"
                       title="Eliminar coeficiente"
                     >
@@ -263,6 +262,54 @@ export function ParametrosPanel({
                 className="px-4 py-2 bg-brand-950 text-white text-sm font-medium rounded-lg hover:bg-brand-800 transition-colors"
               >
                 Sí, modificar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Confirm delete coef modal ── */}
+      {coefToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="w-5 h-5 text-red-500"
+                >
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-neutral-800">
+                  ¿Seguro que querés eliminar el coeficiente “{coefToDelete.label}”?
+                </h3>
+                <p className="text-xs text-neutral-500 mt-1.5">
+                  Se quitará de todos los comparables y afectará el cálculo de la
+                  tasación.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                onClick={() => setCoefToDelete(null)}
+                className="px-4 py-2 text-sm font-medium text-neutral-600 rounded-lg hover:bg-neutral-100 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  dispatch({ type: "REMOVE_CUSTOM_COEF", id: coefToDelete.id });
+                  setCoefToDelete(null);
+                }}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Sí, eliminar
               </button>
             </div>
           </div>

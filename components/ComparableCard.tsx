@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { AppAction, Comparable, CustomCoefDef, SurfaceCoefs } from "@/lib/types";
+import type { AppAction, Comparable, CustomCoefDef, PropertyType, SurfaceCoefs } from "@/lib/types";
 import { calcComparableDerived, formatNumber, roomsError } from "@/lib/calculations";
 import { ValidationAlert } from "./ValidationAlert";
 
@@ -13,6 +13,7 @@ interface ComparableCardProps {
   customCoefDefs: CustomCoefDef[];
   /** Ambientes del bien a tasar, para validar coincidencia */
   propertyAmbientes: number;
+  propertyType: PropertyType;
   dispatch: React.Dispatch<AppAction>;
 }
 
@@ -197,8 +198,10 @@ export function ComparableCard({
   surfaceCoefs,
   customCoefDefs,
   propertyAmbientes,
+  propertyType,
   dispatch,
 }: ComparableCardProps) {
+  const isLocal = propertyType === "local";
   const [newCoefLabel, setNewCoefLabel] = useState("");
   const [addingCoef, setAddingCoef] = useState(false);
   // Valor de ambientes confirmado como "a propósito" (para silenciar la alerta de no coincidencia)
@@ -382,11 +385,13 @@ export function ComparableCard({
             value={comparable.ambientes}
             onChange={(v) => updateField("ambientes", v)}
           />
-          <NumInput
-            label="Dormitorios"
-            value={comparable.dormitorios}
-            onChange={(v) => updateField("dormitorios", v)}
-          />
+          {!isLocal && (
+            <NumInput
+              label="Dormitorios"
+              value={comparable.dormitorios}
+              onChange={(v) => updateField("dormitorios", v)}
+            />
+          )}
           <NumInput
             label="Baños"
             value={comparable.banos}
