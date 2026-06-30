@@ -1,7 +1,7 @@
 "use client";
 
 import type { AppAction, PropertyData } from "@/lib/types";
-import { formatNumber } from "@/lib/calculations";
+import { formatNumber, roomsError } from "@/lib/calculations";
 import { ValidationAlert } from "./ValidationAlert";
 
 interface PropertyFormProps {
@@ -55,9 +55,7 @@ export function PropertyForm({
 }: PropertyFormProps) {
   const { surfaceCoefs } = property;
 
-  const dormGtAmb =
-    (property.ambientes ?? 0) > 0 &&
-    (property.dormitorios ?? 0) > (property.ambientes ?? 0);
+  const dormError = roomsError(property.ambientes ?? 0, property.dormitorios ?? 0);
 
   function update(payload: Partial<PropertyData>) {
     dispatch({ type: "UPDATE_PROPERTY", payload });
@@ -138,13 +136,8 @@ export function PropertyForm({
           />
         </div>
 
-        {/* Validación dormitorios > ambientes */}
-        {dormGtAmb && (
-          <ValidationAlert
-            variant="error"
-            message={`No puede tener más dormitorios (${property.dormitorios}) que ambientes (${property.ambientes}). Revisá los valores.`}
-          />
-        )}
+        {/* Validación dormitorios vs ambientes */}
+        {dormError && <ValidationAlert variant="error" message={dormError} />}
 
         {/* Row 3: Ubicación + Link */}
         <div className="grid grid-cols-2 gap-3">

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { AppAction, Comparable, CustomCoefDef, SurfaceCoefs } from "@/lib/types";
-import { calcComparableDerived, formatNumber } from "@/lib/calculations";
+import { calcComparableDerived, formatNumber, roomsError } from "@/lib/calculations";
 import { ValidationAlert } from "./ValidationAlert";
 
 interface ComparableCardProps {
@@ -210,8 +210,7 @@ export function ComparableCard({
     comparable.ambientes > 0 &&
     comparable.ambientes !== propertyAmbientes;
   const showAmbMismatch = ambientesMismatch && ackAmbientes !== comparable.ambientes;
-  const dormGtAmb =
-    comparable.ambientes > 0 && comparable.dormitorios > comparable.ambientes;
+  const dormError = roomsError(comparable.ambientes, comparable.dormitorios);
 
   function handleAddCustomCoef() {
     const label = newCoefLabel.trim();
@@ -401,7 +400,7 @@ export function ComparableCard({
         </div>
 
         {/* Validaciones de ambientes / dormitorios */}
-        {(showAmbMismatch || dormGtAmb) && (
+        {(showAmbMismatch || dormError) && (
           <div className="space-y-2">
             {showAmbMismatch && (
               <ValidationAlert
@@ -413,12 +412,7 @@ export function ComparableCard({
                 onConfirm={() => setAckAmbientes(comparable.ambientes)}
               />
             )}
-            {dormGtAmb && (
-              <ValidationAlert
-                variant="error"
-                message={`No puede tener más dormitorios (${comparable.dormitorios}) que ambientes (${comparable.ambientes}). Revisá los valores.`}
-              />
-            )}
+            {dormError && <ValidationAlert variant="error" message={dormError} />}
           </div>
         )}
 

@@ -81,6 +81,24 @@ export function formatNumber(value: number, decimals = 2): string {
   }).format(value);
 }
 
+// ─── Validación dormitorios vs ambientes ──────────────────────────────────────
+// Los ambientes incluyen los dormitorios + estares. Solo el monoambiente
+// (1 amb / 1 dorm) puede tener igual cantidad; desde 2 dormitorios, los
+// ambientes deben ser al menos uno más que los dormitorios.
+export function roomsError(
+  ambientes: number,
+  dormitorios: number
+): string | null {
+  if (ambientes <= 0 || dormitorios <= 0) return null;
+  const minAmbientes = dormitorios >= 2 ? dormitorios + 1 : dormitorios;
+  if (ambientes < minAmbientes) {
+    return `Con ${dormitorios} dormitorio${
+      dormitorios === 1 ? "" : "s"
+    } necesitás al menos ${minAmbientes} ambientes (tenés ${ambientes}). Revisá los valores.`;
+  }
+  return null;
+}
+
 // ─── Derived values for a single comparable ───────────────────────────────────
 export function calcComparableDerived(c: Comparable, surfaceCoefs: SurfaceCoefs) {
   const supHom = calcSupHomogeneizada(c.supCubierta, c.supSemiCubierta, c.supDescubierta, c.supBalcon, surfaceCoefs);
