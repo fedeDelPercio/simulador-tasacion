@@ -323,7 +323,7 @@ function TablesPage({
               { backgroundColor: "#334155" },
             ]}
           >
-            {(property.address || "Inmueble a tasar").substring(0, 28)}
+            {(property.address || "Inmueble a analizar").substring(0, 28)}
           </Text>
           {comparables.map((c) => (
             <Text key={c.id} style={[s.cellHeader, ColW(fichaCompW)]}>

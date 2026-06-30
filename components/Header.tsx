@@ -13,7 +13,7 @@ export function Header({ property, propertyType, dispatch }: HeaderProps) {
   return (
     <section className="bg-white border border-neutral-200 rounded-xl p-6">
       <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest mb-4">
-        Datos de la Tasación
+        Datos del Análisis
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Address */}

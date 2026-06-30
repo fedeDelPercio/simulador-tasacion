@@ -174,9 +174,9 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
                   </span>
                   <span
                     className="font-semibold text-brand-950 text-xs truncate max-w-[200px]"
-                    title={property.address || "Inmueble a tasar"}
+                    title={property.address || "Inmueble a analizar"}
                   >
-                    {property.address || "Inmueble a tasar"}
+                    {property.address || "Inmueble a analizar"}
                   </span>
                   {property.link && (
                     <a

@@ -121,7 +121,7 @@ export function PropertyForm({
           </svg>
         </div>
         <span className="text-sm font-semibold text-brand-950">
-          Inmueble a tasar
+          Inmueble a analizar
         </span>
       </div>
 

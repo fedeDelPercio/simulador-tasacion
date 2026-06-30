@@ -102,7 +102,7 @@ export function ResultPanel({
         {/* Total */}
         <div className="p-5 bg-brand-950 rounded-xl text-white">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-white/50 mb-2">
-            Valor Total de Comercialización
+            Valor Sugerido de Comercialización
           </p>
           <p className="text-4xl font-bold tracking-tight">
             ${formatNumber(valorTotal)}
