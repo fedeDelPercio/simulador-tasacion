@@ -235,7 +235,7 @@ export default function SimuladorPage() {
           <div className="mb-4">
             <h2 className="text-sm font-semibold text-brand-950">Comparables</h2>
             {comparables.length > 0 && (
-              <p className="text-xs text-neutral-400 mt-0.5">
+              <p className="text-xs text-neutral-600 mt-0.5">
                 {comparables.length} de {MAX_COMPARABLES} cargados
               </p>
             )}
@@ -248,13 +248,13 @@ export default function SimuladorPage() {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
-                className="w-9 h-9 mx-auto mb-3 text-neutral-300"
+                className="w-9 h-9 mx-auto mb-3 text-neutral-500"
               >
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                 <line x1="3" y1="9" x2="21" y2="9" />
                 <line x1="9" y1="21" x2="9" y2="9" />
               </svg>
-              <p className="text-sm text-neutral-400">
+              <p className="text-sm text-neutral-600">
                 Agregá comparables para comenzar la tasación.
               </p>
             </div>
@@ -338,7 +338,7 @@ export default function SimuladorPage() {
           </div>
         )}
 
-        <p className="text-xs text-neutral-400 leading-relaxed pb-8">
+        <p className="text-xs text-neutral-600 leading-relaxed pb-8">
           Los coeficientes de homogeneización representan cómo es el inmueble
           tasado con respecto a cada comparable: =1 equivalente, &gt;1 el tasado
           es superior al comparable, &lt;1 el tasado es inferior al comparable.

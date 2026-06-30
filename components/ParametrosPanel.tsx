@@ -47,16 +47,16 @@ export function ParametrosPanel({
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
-          className="w-4 h-4 text-neutral-400 flex-shrink-0"
+          className="w-4 h-4 text-neutral-600 flex-shrink-0"
         >
           <circle cx="12" cy="12" r="3" />
           <path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14" />
         </svg>
         <div className="flex-1">
-          <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest">
+          <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest">
             Parámetros de valuación
           </p>
-          <p className="text-xs text-neutral-400 mt-0.5">
+          <p className="text-xs text-neutral-600 mt-0.5">
             Coeficientes de ponderación de superficie
           </p>
         </div>
@@ -65,7 +65,7 @@ export function ParametrosPanel({
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
-          className={`w-4 h-4 text-neutral-400 transition-transform flex-shrink-0 ${
+          className={`w-4 h-4 text-neutral-600 transition-transform flex-shrink-0 ${
             show ? "rotate-180" : ""
           }`}
         >
@@ -78,7 +78,7 @@ export function ParametrosPanel({
           {/* ── Surface coefficients ── */}
           <div className="pt-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-medium text-neutral-500">
+              <p className="text-xs font-medium text-neutral-700">
                 Ponderación de superficies
               </p>
               {!editingSurface ? (
@@ -119,7 +119,7 @@ export function ParametrosPanel({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {surfaceFields.map(([label, key]) => (
                 <div key={key} className="flex flex-col gap-1.5">
-                  <label className="text-xs text-neutral-400">{label}</label>
+                  <label className="text-xs text-neutral-600">{label}</label>
                   {editingSurface ? (
                     <input
                       type="number"
@@ -148,10 +148,10 @@ export function ParametrosPanel({
           <div>
             <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-xs font-medium text-neutral-500">
+                <p className="text-xs font-medium text-neutral-700">
                   Coeficientes adicionales
                 </p>
-                <p className="text-[11px] text-neutral-400 mt-0.5">
+                <p className="text-[11px] text-neutral-600 mt-0.5">
                   Se agregan a los coeficientes del tipo de inmueble seleccionado.
                 </p>
               </div>
@@ -168,7 +168,7 @@ export function ParametrosPanel({
                     <span>{def.label}</span>
                     <button
                       onClick={() => setCoefToDelete(def)}
-                      className="text-neutral-400 hover:text-red-400 transition-colors ml-1"
+                      className="text-neutral-600 hover:text-red-400 transition-colors ml-1"
                       title="Eliminar coeficiente"
                     >
                       <svg
@@ -241,7 +241,7 @@ export function ParametrosPanel({
                 <h3 className="text-sm font-semibold text-neutral-800">
                   ¿Seguro que querés modificar las ponderaciones de superficie?
                 </h3>
-                <p className="text-xs text-neutral-500 mt-1.5">
+                <p className="text-xs text-neutral-700 mt-1.5">
                   Estos valores afectan el cálculo de la tasación. Modificalos
                   solo si estás seguro.
                 </p>
@@ -289,7 +289,7 @@ export function ParametrosPanel({
                 <h3 className="text-sm font-semibold text-neutral-800">
                   ¿Seguro que querés eliminar el coeficiente “{coefToDelete.label}”?
                 </h3>
-                <p className="text-xs text-neutral-500 mt-1.5">
+                <p className="text-xs text-neutral-700 mt-1.5">
                   Se quitará de todos los comparables y afectará el cálculo de la
                   tasación.
                 </p>

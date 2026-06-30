@@ -48,7 +48,7 @@ function Cell({
 
   if (empty || value === null || value === 0) {
     return (
-      <td className={`${px} py-3 text-right text-neutral-300 bg-neutral-100/50 ${borderL} ${borderR}`}>
+      <td className={`${px} py-3 text-right text-neutral-500 bg-neutral-100/50 ${borderL} ${borderR}`}>
         —
       </td>
     );
@@ -119,10 +119,10 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
       {/* Header */}
       <div className="px-6 py-4 border-b border-neutral-100 flex items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest">
+          <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest">
             Cuadro comparativo
           </p>
-          <p className="text-xs text-neutral-400 mt-0.5">
+          <p className="text-xs text-neutral-600 mt-0.5">
             Resumen del inmueble y los comparables
           </p>
         </div>
@@ -143,16 +143,16 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-neutral-200">
-              <th className="text-left px-5 py-3 font-semibold text-neutral-400 text-[10px] uppercase tracking-wider whitespace-nowrap">
+              <th className="text-left px-5 py-3 font-semibold text-neutral-600 text-[10px] uppercase tracking-wider whitespace-nowrap">
                 Dirección
               </th>
-              <th className="text-center px-4 py-3 font-semibold text-neutral-400 text-[10px] uppercase tracking-wider">
+              <th className="text-center px-4 py-3 font-semibold text-neutral-600 text-[10px] uppercase tracking-wider">
                 Amb.
               </th>
-              <th className="text-right px-4 py-3 font-semibold text-neutral-400 text-[10px] uppercase tracking-wider whitespace-nowrap">
+              <th className="text-right px-4 py-3 font-semibold text-neutral-600 text-[10px] uppercase tracking-wider whitespace-nowrap">
                 Sup. Total
               </th>
-              <th className="text-right px-4 py-3 font-semibold text-neutral-400 text-[10px] uppercase tracking-wider whitespace-nowrap">
+              <th className="text-right px-4 py-3 font-semibold text-neutral-600 text-[10px] uppercase tracking-wider whitespace-nowrap">
                 Precio
               </th>
               {/* Derived sub-panel headers */}
@@ -183,7 +183,7 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
                       href={property.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-shrink-0 text-neutral-300 hover:text-brand-800 transition-colors"
+                      className="flex-shrink-0 text-neutral-500 hover:text-brand-800 transition-colors"
                       title="Abrir en nueva pestaña"
                     >
                       <ExternalLinkIcon />
@@ -200,7 +200,7 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
               <td className="px-4 py-3 text-right text-neutral-600 text-xs tabular-nums">
                 {(property.precio ?? 0) > 0
                   ? `$${formatNumber(property.precio, 0)}`
-                  : <span className="text-neutral-400 italic text-[11px]">a tasar</span>}
+                  : <span className="text-neutral-600 italic text-[11px]">a tasar</span>}
               </td>
               {/* Derived cols — subject */}
               <td className="pl-5 pr-4 py-3 text-right bg-brand-50/80 border-l-2 border-neutral-200">
@@ -208,9 +208,9 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
                   {supHomInmueble > 0 ? `${formatNumber(supHomInmueble)} m²` : "—"}
                 </span>
               </td>
-              <td className="px-4 py-3 text-right text-neutral-400 text-xs bg-brand-50/80">—</td>
-              <td className="px-4 py-3 text-right text-neutral-400 text-xs bg-brand-50/80">—</td>
-              <td className="pl-4 pr-6 py-3 text-right text-neutral-400 text-xs bg-brand-50/80">—</td>
+              <td className="px-4 py-3 text-right text-neutral-600 text-xs bg-brand-50/80">—</td>
+              <td className="px-4 py-3 text-right text-neutral-600 text-xs bg-brand-50/80">—</td>
+              <td className="pl-4 pr-6 py-3 text-right text-neutral-600 text-xs bg-brand-50/80">—</td>
             </tr>
 
             {/* Comparable rows */}
@@ -218,21 +218,21 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
               <tr key={c.id} className="border-b border-neutral-100 last:border-0 hover:bg-neutral-50/50 transition-colors">
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-2 min-w-[160px]">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-neutral-100 text-neutral-500 text-[9px] font-bold flex-shrink-0">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-neutral-100 text-neutral-700 text-[9px] font-bold flex-shrink-0">
                       {i + 1}
                     </span>
                     <span
                       className="text-neutral-700 text-xs truncate max-w-[180px]"
                       title={c.ubicacion || `Comparable ${i + 1}`}
                     >
-                      {c.ubicacion || <span className="text-neutral-300 italic">sin dirección</span>}
+                      {c.ubicacion || <span className="text-neutral-500 italic">sin dirección</span>}
                     </span>
                     {c.link && (
                       <a
                         href={c.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-shrink-0 text-neutral-300 hover:text-brand-800 transition-colors"
+                        className="flex-shrink-0 text-neutral-500 hover:text-brand-800 transition-colors"
                         title="Abrir en nueva pestaña"
                       >
                         <ExternalLinkIcon />
@@ -240,16 +240,16 @@ export function ComparisonTable({ property, supHomInmueble, comparables, surface
                     )}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-center text-neutral-500 text-xs tabular-nums">
+                <td className="px-4 py-3 text-center text-neutral-700 text-xs tabular-nums">
                   {c.ambientes || "—"}
                 </td>
-                <td className="px-4 py-3 text-right text-neutral-500 text-xs tabular-nums">
+                <td className="px-4 py-3 text-right text-neutral-700 text-xs tabular-nums">
                   {c.supCubierta > 0 ? `${formatNumber(c.supCubierta + c.supSemiCubierta + c.supDescubierta + c.supBalcon)} m²` : "—"}
                 </td>
-                <td className="px-4 py-3 text-right text-neutral-500 text-xs tabular-nums">
+                <td className="px-4 py-3 text-right text-neutral-700 text-xs tabular-nums">
                   {c.precio > 0
                     ? `$${formatNumber(c.precio, 0)}`
-                    : <span className="text-neutral-300 italic text-[11px]">sin datos</span>}
+                    : <span className="text-neutral-500 italic text-[11px]">sin datos</span>}
                 </td>
                 <Cell value={derived[i]?.supHom    ?? null} isOutlier={supHomFlags[i]}  format={(v) => `${formatNumber(v)} m²`}  empty={!derived[i]} first />
                 <Cell value={derived[i]?.valorM2   ?? null} isOutlier={valorM2Flags[i]} format={(v) => `$${formatNumber(v, 0)}`} empty={!derived[i]} />

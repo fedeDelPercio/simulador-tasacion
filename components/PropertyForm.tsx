@@ -56,7 +56,7 @@ function NumInput({
   return (
     <div className="flex flex-col gap-1.5">
       <label
-        className={`font-medium text-neutral-500 ${small ? "text-[10px]" : "text-xs"}`}
+        className={`font-medium text-neutral-700 ${small ? "text-[10px]" : "text-xs"}`}
       >
         {label}
         {required && <span className="text-red-400 ml-0.5">*</span>}
@@ -187,7 +187,7 @@ export function PropertyForm({
         {/* Row 3: Ubicación + Link */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-neutral-500">Ubicación</label>
+            <label className="text-xs font-medium text-neutral-700">Ubicación</label>
             <input
               type="text"
               value={property.address ?? ""}
@@ -197,7 +197,7 @@ export function PropertyForm({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-neutral-500">Link <span className="font-normal text-neutral-400">(opcional)</span></label>
+            <label className="text-xs font-medium text-neutral-700">Link <span className="font-normal text-neutral-600">(opcional)</span></label>
             <div className="flex items-center gap-1">
               <input
                 type="url"
@@ -211,7 +211,7 @@ export function PropertyForm({
                   href={property.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-neutral-400 hover:text-brand-800 transition-colors"
+                  className="p-2 text-neutral-600 hover:text-brand-800 transition-colors"
                   title="Abrir link"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
@@ -227,8 +227,8 @@ export function PropertyForm({
 
         {/* Foto del inmueble */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-neutral-500">
-            Foto del inmueble <span className="font-normal text-neutral-400">(opcional)</span>
+          <label className="text-xs font-medium text-neutral-700">
+            Foto del inmueble <span className="font-normal text-neutral-600">(opcional)</span>
           </label>
           <input
             ref={fileInputRef}
@@ -266,7 +266,7 @@ export function PropertyForm({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center justify-center gap-1.5 py-6 border-2 border-dashed border-neutral-200 rounded-xl text-neutral-400 hover:border-brand-400 hover:text-brand-700 transition-colors"
+              className="flex flex-col items-center justify-center gap-1.5 py-6 border-2 border-dashed border-neutral-200 rounded-xl text-neutral-600 hover:border-brand-400 hover:text-brand-700 transition-colors"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -282,14 +282,14 @@ export function PropertyForm({
         {supHomInmueble > 0 && (
           <div className="flex items-center justify-between p-4 bg-brand-50 border border-neutral-200 rounded-xl">
             <div>
-              <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest mb-1">
+              <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest mb-1">
                 Superficie Homogeneizada
               </p>
               <p className="text-2xl font-bold text-brand-950">
                 {formatNumber(supHomInmueble)} m²
               </p>
             </div>
-            <div className="text-xs text-neutral-400 text-right hidden sm:block leading-relaxed">
+            <div className="text-xs text-neutral-600 text-right hidden sm:block leading-relaxed">
               <p>(Cub × {surfaceCoefs.cubierta})</p>
               <p>+ (Semi × {surfaceCoefs.semicubierta})</p>
               <p>+ (Desc × {surfaceCoefs.descubierta})</p>

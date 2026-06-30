@@ -49,10 +49,10 @@ export function ResultPanel({
     <section className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
       {/* Section heading */}
       <div className="px-6 py-4 border-b border-neutral-100">
-        <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest">
+        <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest">
           Resultado de la Tasación
         </p>
-        <p className="text-xs text-neutral-400 mt-0.5">
+        <p className="text-xs text-neutral-600 mt-0.5">
           Basado en {validCount} comparable{validCount !== 1 ? "s" : ""} válido
           {validCount !== 1 ? "s" : ""}
         </p>
@@ -79,23 +79,23 @@ export function ResultPanel({
         {/* VUM + Depto row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
-            <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest mb-1">
+            <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest mb-1">
               V.U.M. Promedio
             </p>
             <p className="text-2xl font-bold text-brand-950">
               ${formatNumber(vumAverage)}
             </p>
-            <p className="text-xs text-neutral-400 mt-1">USD/m²</p>
+            <p className="text-xs text-neutral-600 mt-1">USD/m²</p>
           </div>
 
           <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
-            <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest mb-1">
+            <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest mb-1">
               {PROPERTY_TYPE_VALOR_LABEL[propertyType]}
             </p>
             <p className="text-2xl font-bold text-brand-950">
               ${formatNumber(valorDepto)}
             </p>
-            <p className="text-xs text-neutral-400 mt-1">
+            <p className="text-xs text-neutral-600 mt-1">
               {formatNumber(vumAverage)} × {formatNumber(supHomInmueble)} m²
             </p>
           </div>
@@ -104,7 +104,7 @@ export function ResultPanel({
         {/* Cochera input */}
         <div className="flex items-center gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-neutral-500">
+            <label className="text-xs font-medium text-neutral-700">
               Cochera (USD) — opcional
             </label>
             <input
@@ -123,7 +123,7 @@ export function ResultPanel({
             />
           </div>
           {cochera > 0 && (
-            <div className="mt-5 text-sm text-neutral-400">
+            <div className="mt-5 text-sm text-neutral-600">
               + ${formatNumber(cochera)}
             </div>
           )}

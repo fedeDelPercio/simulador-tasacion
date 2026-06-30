@@ -61,13 +61,13 @@ function CoefSlider({
       {/* Label row */}
       <div className="flex items-center justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
-          <label className="text-xs font-semibold text-neutral-700 leading-tight truncate">
+          <label className="text-sm font-semibold text-neutral-800 leading-tight truncate">
             {label}
           </label>
           {onDelete && (
             <button
               onClick={onDelete}
-              className="flex-shrink-0 w-3.5 h-3.5 flex items-center justify-center rounded-full text-neutral-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+              className="flex-shrink-0 w-3.5 h-3.5 flex items-center justify-center rounded-full text-neutral-500 hover:text-red-500 hover:bg-red-50 transition-colors"
               title="Eliminar coeficiente"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-2 h-2">
@@ -78,8 +78,8 @@ function CoefSlider({
           )}
         </div>
         <span
-          className={`flex-shrink-0 text-xs font-semibold tabular-nums ${
-            isNeutral ? "text-neutral-500" : isAbove ? "text-brand-700" : "text-[#e07b2e]"
+          className={`flex-shrink-0 text-sm font-semibold tabular-nums ${
+            isNeutral ? "text-neutral-700" : isAbove ? "text-brand-700" : "text-[#e07b2e]"
           }`}
         >
           {pct > 0 ? "+" : ""}{pct}%
@@ -169,7 +169,7 @@ function NumInput({
   return (
     <div className="flex flex-col gap-1.5">
       <label
-        className={`font-medium text-neutral-500 ${
+        className={`font-medium text-neutral-700 ${
           small ? "text-[10px]" : "text-xs"
         }`}
       >
@@ -275,13 +275,13 @@ export function ComparableCard({
           </span>
         )}
         {!isValid && comparable.precio === 0 && (
-          <span className="text-xs text-neutral-300 italic">sin datos</span>
+          <span className="text-xs text-neutral-500 italic">sin datos</span>
         )}
         <button
           onClick={() =>
             dispatch({ type: "REMOVE_COMPARABLE", id: comparable.id })
           }
-          className="ml-auto text-neutral-300 hover:text-red-400 transition-colors p-1 rounded"
+          className="ml-auto text-neutral-500 hover:text-red-400 transition-colors p-1 rounded"
           title="Eliminar comparable"
         >
           <svg
@@ -303,7 +303,7 @@ export function ComparableCard({
         {/* Address + link row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-neutral-500">
+            <label className="text-xs font-medium text-neutral-700">
               Ubicación / Dirección <span className="text-red-400">*</span>
             </label>
             <input
@@ -315,7 +315,7 @@ export function ComparableCard({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-neutral-500">Link</label>
+            <label className="text-xs font-medium text-neutral-700">Link</label>
             <div className="flex items-center gap-1">
               <input
                 type="url"
@@ -329,7 +329,7 @@ export function ComparableCard({
                   href={comparable.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-neutral-400 hover:text-brand-800 transition-colors"
+                  className="p-2 text-neutral-600 hover:text-brand-800 transition-colors"
                   title="Abrir link"
                 >
                   <svg
@@ -451,7 +451,7 @@ export function ComparableCard({
                 key={label}
                 className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2"
               >
-                <p className="text-[10px] font-medium text-neutral-400 uppercase tracking-wide">
+                <p className="text-[10px] font-medium text-neutral-600 uppercase tracking-wide">
                   {label}
                 </p>
                 <p className="text-sm font-semibold text-brand-950 mt-0.5">
@@ -468,7 +468,7 @@ export function ComparableCard({
             onClick={() =>
               dispatch({ type: "TOGGLE_COMPARABLE_COEFS", id: comparable.id })
             }
-            className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-neutral-600 hover:text-neutral-600 transition-colors"
           >
             <svg
               viewBox="0 0 24 24"
@@ -487,7 +487,7 @@ export function ComparableCard({
           {comparable.showCoefs && (
             <div className="mt-3 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
               {/* Range labels */}
-              <div className="flex justify-between text-[11px] text-neutral-500 mb-3 px-0.5">
+              <div className="flex justify-between text-xs text-neutral-600 mb-3 px-0.5">
                 <span>−20%</span>
                 <span className="font-medium">neutro</span>
                 <span>+20%</span>
@@ -551,7 +551,7 @@ export function ComparableCard({
                     </button>
                     <button
                       onClick={() => { setAddingCoef(false); setNewCoefLabel(""); }}
-                      className="text-neutral-400 hover:text-neutral-600 transition-colors"
+                      className="text-neutral-600 hover:text-neutral-600 transition-colors"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
                         <line x1="18" y1="6" x2="6" y2="18" />

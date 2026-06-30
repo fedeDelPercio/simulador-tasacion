@@ -12,13 +12,13 @@ interface HeaderProps {
 export function Header({ property, propertyType, dispatch }: HeaderProps) {
   return (
     <section className="bg-white border border-neutral-200 rounded-xl p-6">
-      <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest mb-4">
+      <p className="text-[11px] font-semibold text-neutral-600 uppercase tracking-widest mb-4">
         Datos del Análisis
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Address */}
         <div className="sm:col-span-2 flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-neutral-700">
             Dirección del inmueble <span className="text-red-400">*</span>
           </label>
           <input
@@ -34,7 +34,7 @@ export function Header({ property, propertyType, dispatch }: HeaderProps) {
 
         {/* Date */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-neutral-500">Fecha</label>
+          <label className="text-xs font-medium text-neutral-700">Fecha</label>
           <input
             type="date"
             value={property.date}
@@ -47,7 +47,7 @@ export function Header({ property, propertyType, dispatch }: HeaderProps) {
 
         {/* Agent */}
         <div className="sm:col-span-2 flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-neutral-700">
             Agente <span className="text-red-400">*</span>
           </label>
           <input
@@ -63,7 +63,7 @@ export function Header({ property, propertyType, dispatch }: HeaderProps) {
 
         {/* Property type */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-neutral-500">
+          <label className="text-xs font-medium text-neutral-700">
             Tipo de inmueble <span className="text-red-400">*</span>
           </label>
           <div className="relative">
@@ -85,7 +85,7 @@ export function Header({ property, propertyType, dispatch }: HeaderProps) {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
+              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600"
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
