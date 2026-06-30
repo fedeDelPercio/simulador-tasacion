@@ -525,7 +525,7 @@ export function ComparableCard({
 
               {/* Add custom coef inline */}
               <div className="mt-4 pt-3 border-t border-neutral-200 flex items-center justify-between">
-                <p className="text-xs font-medium text-neutral-600">
+                <p className="px-3 py-1.5 bg-brand-800 text-white text-sm font-bold rounded-lg">
                   Coef. Total = {formatNumber(coefTotal, 4)}
                 </p>
                 {addingCoef ? (
