@@ -185,9 +185,8 @@ export default function SimuladorPage() {
               className="text-base font-semibold text-white leading-tight"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Simulador de Tasación
+              Análisis Comparativo de Mercado
             </h1>
-            <p className="text-xs text-brand-400">Análisis Comparativo de Mercado</p>
           </div>
           <div className="ml-auto flex items-center gap-4">
             {comparables.length > 0 && (
