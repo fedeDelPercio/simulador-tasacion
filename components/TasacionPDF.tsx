@@ -1,5 +1,5 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 import type {
   Comparable,
   CustomCoefDef,
@@ -61,6 +61,14 @@ const s = StyleSheet.create({
     marginBottom: 14,
     textAlign: "center",
     letterSpacing: 0.3,
+  },
+
+  propertyPhoto: {
+    width: "100%",
+    height: 180,
+    objectFit: "cover",
+    borderRadius: 4,
+    marginBottom: 16,
   },
 
   table: { flexDirection: "column", width: "100%", marginBottom: 20 },
@@ -297,6 +305,12 @@ function TablesPage({
       {/* Section heading */}
       <Text style={s.mainTitle}>RESUMEN DE LO ANALIZADO</Text>
       <Text style={s.subTitle}>{typeLabel}</Text>
+
+      {/* Foto del inmueble */}
+      {property.photo ? (
+        // eslint-disable-next-line jsx-a11y/alt-text
+        <Image src={property.photo} style={s.propertyPhoto} />
+      ) : null}
 
       {/* ── Ficha comparativa ── */}
       <View style={s.table}>

@@ -1,8 +1,35 @@
 "use client";
 
+import { useRef } from "react";
 import type { AppAction, PropertyData } from "@/lib/types";
 import { formatNumber, roomsError } from "@/lib/calculations";
 import { ValidationAlert } from "./ValidationAlert";
+
+/** Lee un archivo de imagen, lo redimensiona (máx 1280px) y devuelve un data URL JPEG. */
+function fileToResizedDataURL(file: File, maxSize = 1280): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("no canvas context"));
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = reject;
+      img.src = reader.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 interface PropertyFormProps {
   property: PropertyData;
@@ -56,9 +83,22 @@ export function PropertyForm({
   const { surfaceCoefs } = property;
 
   const dormError = roomsError(property.ambientes ?? 0, property.dormitorios ?? 0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function update(payload: Partial<PropertyData>) {
     dispatch({ type: "UPDATE_PROPERTY", payload });
+  }
+
+  async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await fileToResizedDataURL(file);
+      update({ photo: dataUrl });
+    } catch {
+      // si falla la lectura, no rompemos el formulario
+    }
+    e.target.value = ""; // permite volver a elegir el mismo archivo
   }
 
   return (
@@ -178,6 +218,59 @@ export function PropertyForm({
               )}
             </div>
           </div>
+        </div>
+
+        {/* Foto del inmueble */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-neutral-500">
+            Foto del inmueble <span className="font-normal text-neutral-400">(opcional)</span>
+          </label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handlePhoto}
+            className="hidden"
+          />
+          {property.photo ? (
+            <div className="relative inline-block w-fit">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={property.photo}
+                alt="Foto del inmueble a tasar"
+                className="max-h-48 rounded-lg border border-neutral-200 object-cover"
+              />
+              <div className="absolute top-2 right-2 flex gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-2.5 py-1 bg-white/90 backdrop-blur border border-neutral-200 text-neutral-700 text-[11px] font-medium rounded-md hover:bg-white transition-colors"
+                >
+                  Cambiar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => update({ photo: "" })}
+                  className="px-2.5 py-1 bg-white/90 backdrop-blur border border-neutral-200 text-red-600 text-[11px] font-medium rounded-md hover:bg-white transition-colors"
+                >
+                  Quitar
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col items-center justify-center gap-1.5 py-6 border-2 border-dashed border-neutral-200 rounded-xl text-neutral-400 hover:border-brand-400 hover:text-brand-700 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              <span className="text-xs font-medium">Subir foto</span>
+            </button>
+          )}
         </div>
 
         {/* Sup. Hom. result */}

@@ -92,6 +92,8 @@ export interface PropertyData {
   toilete: number;
   precio: number;
   cochera: number;
+  /** Foto del inmueble como data URL (base64). Vacío si no hay foto. */
+  photo: string;
   surfaceCoefs: SurfaceCoefs;
 }
 
@@ -174,6 +176,7 @@ export const INITIAL_STATE: AppState = {
     toilete: 0,
     precio: 0,
     cochera: 0,
+    photo: "",
     surfaceCoefs: { ...DEFAULT_SURFACE_COEFS },
   },
   comparables: [],
