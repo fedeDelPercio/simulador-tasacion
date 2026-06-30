@@ -24,6 +24,15 @@ export const PROPERTY_TYPE_LABELS: Record<PropertyType, string> = {
   local: "Local Comercial",
 };
 
+// "Valor del/de la ..." con el artículo correcto según el tipo de inmueble
+export const PROPERTY_TYPE_VALOR_LABEL: Record<PropertyType, string> = {
+  departamento: "Valor del Departamento",
+  casa: "Valor de la Casa",
+  casa_bc: "Valor de la Casa",
+  ph: "Valor del PH",
+  local: "Valor del Local",
+};
+
 function makePreset(prefix: string, labels: string[]): CustomCoefDef[] {
   return labels.map((label, i) => ({ id: `${prefix}_${i}`, label }));
 }

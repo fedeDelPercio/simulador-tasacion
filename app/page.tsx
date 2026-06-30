@@ -317,6 +317,7 @@ export default function SimuladorPage() {
             surfaceCoefs={property.surfaceCoefs}
             cochera={cochera}
             vumAverage={vumAverage}
+            propertyType={propertyType}
             dispatch={dispatch}
           />
         )}

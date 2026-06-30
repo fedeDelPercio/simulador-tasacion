@@ -1,6 +1,7 @@
 "use client";
 
-import type { AppAction, Comparable, SurfaceCoefs } from "@/lib/types";
+import type { AppAction, Comparable, PropertyType, SurfaceCoefs } from "@/lib/types";
+import { PROPERTY_TYPE_LABELS, PROPERTY_TYPE_VALOR_LABEL } from "@/lib/types";
 import { calcValorTotal, formatNumber } from "@/lib/calculations";
 
 interface ResultPanelProps {
@@ -9,6 +10,7 @@ interface ResultPanelProps {
   surfaceCoefs: SurfaceCoefs;
   cochera: number;
   vumAverage: number;
+  propertyType: PropertyType;
   dispatch: React.Dispatch<AppAction>;
 }
 
@@ -18,6 +20,7 @@ export function ResultPanel({
   surfaceCoefs,
   cochera,
   vumAverage,
+  propertyType,
   dispatch,
 }: ResultPanelProps) {
   const validCount = comparables.filter((c) => {
@@ -57,7 +60,7 @@ export function ResultPanel({
 
           <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
             <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-widest mb-1">
-              Valor del Departamento
+              {PROPERTY_TYPE_VALOR_LABEL[propertyType]}
             </p>
             <p className="text-2xl font-bold text-brand-950">
               ${formatNumber(valorDepto)}
@@ -109,7 +112,7 @@ export function ResultPanel({
           {cochera > 0 && (
             <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-1.5 text-xs text-white/50">
               <div className="flex justify-between">
-                <span>Departamento</span>
+                <span>{PROPERTY_TYPE_LABELS[propertyType]}</span>
                 <span className="font-medium text-white/70">${formatNumber(valorDepto)}</span>
               </div>
               <div className="flex justify-between">
