@@ -2,7 +2,11 @@
 
 import type { AppAction, Comparable, PropertyType, SurfaceCoefs } from "@/lib/types";
 import { PROPERTY_TYPE_LABELS, PROPERTY_TYPE_VALOR_LABEL } from "@/lib/types";
-import { calcValorTotal, formatNumber } from "@/lib/calculations";
+import { calcComparableDerived, calcValorTotal, formatNumber } from "@/lib/calculations";
+import { ValidationAlert } from "./ValidationAlert";
+
+// Diferencia máxima admitida entre el VUM más alto y el más bajo de los comparables
+const VUM_SPREAD_THRESHOLD = 0.125;
 
 interface ResultPanelProps {
   comparables: Comparable[];
@@ -23,11 +27,20 @@ export function ResultPanel({
   propertyType,
   dispatch,
 }: ResultPanelProps) {
-  const validCount = comparables.filter((c) => {
-    if (c.precio <= 0) return false;
-    const supHom = c.supCubierta * surfaceCoefs.cubierta + c.supSemiCubierta * surfaceCoefs.semicubierta + c.supDescubierta * surfaceCoefs.descubierta + c.supBalcon * surfaceCoefs.balcon;
-    return supHom > 0;
-  }).length;
+  // VUM de cada comparable válido (precio y superficie homogeneizada > 0)
+  const validVums = comparables
+    .filter((c) => c.precio > 0)
+    .map((c) => calcComparableDerived(c, surfaceCoefs))
+    .filter((d) => d.supHom > 0)
+    .map((d) => d.vum);
+
+  const validCount = validVums.length;
+
+  // Dispersión entre el VUM más alto y el más bajo
+  const minVum = validVums.length ? Math.min(...validVums) : 0;
+  const maxVum = validVums.length ? Math.max(...validVums) : 0;
+  const vumSpread = minVum > 0 ? (maxVum - minVum) / minVum : 0;
+  const vumInconsistente = validCount >= 2 && vumSpread > VUM_SPREAD_THRESHOLD;
 
   const valorDepto = vumAverage * supHomInmueble;
   const valorTotal = calcValorTotal(vumAverage, supHomInmueble, cochera);
@@ -46,6 +59,23 @@ export function ResultPanel({
       </div>
 
       <div className="p-6 space-y-5">
+        {/* Aviso de inconsistencia entre VUM de comparables */}
+        {vumInconsistente && (
+          <ValidationAlert
+            variant="warning"
+            message={`Inconsistencia entre comparables: el VUM más alto ($${formatNumber(
+              maxVum,
+              0
+            )}) supera al más bajo ($${formatNumber(minVum, 0)}) en ${formatNumber(
+              vumSpread * 100,
+              1
+            )}% (máximo sugerido ${formatNumber(
+              VUM_SPREAD_THRESHOLD * 100,
+              1
+            )}%). Revisá la selección de comparables.`}
+          />
+        )}
+
         {/* VUM + Depto row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
