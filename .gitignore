@@ -46,3 +46,6 @@ scripts/test-pdf-screenshots/
 scripts/test-output.pdf
 scripts/*.png
 scripts/*.pdf
+
+# PDFs de prueba locales (no versionar)
+_ver-pdfs/
