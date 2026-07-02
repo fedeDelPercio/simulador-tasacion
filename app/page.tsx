@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import type { AppAction, AppState } from "@/lib/types";
 import { INITIAL_STATE, PROPERTY_TYPE_COEF_PRESETS, createEmptyComparable } from "@/lib/types";
+import { AGENTS, DEFAULT_AGENT_ID } from "@/lib/agents";
 import { calcVUMPromedio, calcSupHomogeneizada } from "@/lib/calculations";
 import { Header } from "@/components/Header";
 import { PropertyForm } from "@/components/PropertyForm";
@@ -123,6 +124,7 @@ function reducer(state: AppState, action: AppAction): AppState {
 export default function SimuladorPage() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [exportingPDF, setExportingPDF] = React.useState(false);
+  const [agentId, setAgentId] = useState<string>(DEFAULT_AGENT_ID);
 
   async function handleExportPDF() {
     setExportingPDF(true);
@@ -138,6 +140,7 @@ export default function SimuladorPage() {
           supHomInmueble,
           vumAverage,
           cochera,
+          agentId,
         }),
       });
       const blob = await res.blob();
@@ -189,6 +192,31 @@ export default function SimuladorPage() {
             </h1>
           </div>
           <div className="ml-auto flex items-center gap-4">
+            {comparables.length > 0 && (
+              <div className="relative">
+                <select
+                  value={agentId}
+                  onChange={(e) => setAgentId(e.target.value)}
+                  title="Agente / plantilla del PDF"
+                  className="appearance-none pl-3 pr-8 py-2 bg-white/10 border border-white/20 text-white text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer"
+                >
+                  {AGENTS.map((a) => (
+                    <option key={a.id} value={a.id} className="text-neutral-800">
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            )}
             {comparables.length > 0 && (
               <button
                 onClick={handleExportPDF}
