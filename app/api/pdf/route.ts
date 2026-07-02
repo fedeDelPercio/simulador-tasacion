@@ -40,7 +40,9 @@ export async function POST(req: Request) {
     customCoefDefs: data.customCoefDefs,
     propertyType: data.propertyType,
     surfaceCoefs: data.property.surfaceCoefs,
+    supHomInmueble: data.supHomInmueble,
     vumAverage: data.vumAverage,
+    cochera: data.cochera,
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overlayBuffer = await renderToBuffer(React.createElement(AcmOverlay, overlayProps) as any);
