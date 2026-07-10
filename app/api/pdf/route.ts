@@ -2,7 +2,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
 import { AcmOverlay } from "@/components/AcmOverlay";
 import type { AcmOverlayProps } from "@/components/AcmOverlay";
-import { getAgent, ACM_LAYOUT } from "@/lib/agents";
+import { getAgent, getAgentByName, ACM_LAYOUT } from "@/lib/agents";
 import type { Comparable, CustomCoefDef, PropertyData, PropertyType } from "@/lib/types";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import fs from "fs";
@@ -25,10 +25,15 @@ const WHITE = rgb(1, 1, 1);
 
 export async function POST(req: Request) {
   const data: PdfRequest = await req.json();
-  const agent = getAgent(data.agentId);
+  // La plantilla se elige por el campo "Agente"; si no coincide, cae al default.
+  let agent = data.agentId ? getAgent(data.agentId) : getAgentByName(data.property?.agent);
 
-  // ── 1. Cargar la plantilla del agente ─────────────────────────────────────
-  const tplPath = path.join(process.cwd(), "plantillas-acm", agent.template);
+  // Protección: si el PDF del agente todavía no está cargado, usar el default.
+  let tplPath = path.join(process.cwd(), "plantillas-acm", agent.template);
+  if (!fs.existsSync(tplPath)) {
+    agent = getAgent(undefined); // default (primer agente)
+    tplPath = path.join(process.cwd(), "plantillas-acm", agent.template);
+  }
   const tplBytes = fs.readFileSync(tplPath);
   const doc = await PDFDocument.load(tplBytes);
   const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);

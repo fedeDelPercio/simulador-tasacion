@@ -15,13 +15,33 @@ export const AGENTS: AgentProfile[] = [
     name: "Giuliano Larroca",
     template: "acm-giuliano-larroca.pdf",
   },
+  {
+    id: "cecilia-paul",
+    name: "Cecilia Paul",
+    template: "acm-cecilia-paul.pdf",
+  },
   // Próximos agentes: agregar acá con su PDF en /plantillas-acm
 ];
 
 export const DEFAULT_AGENT_ID = AGENTS[0].id;
 
+function normalize(str: string): string {
+  return str
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "") // saca acentos
+    .toLowerCase()
+    .trim();
+}
+
 export function getAgent(id: string | undefined | null): AgentProfile {
   return AGENTS.find((a) => a.id === id) ?? AGENTS[0];
+}
+
+/** Resuelve el agente por el texto del campo "Agente" (nombre). Cae al default. */
+export function getAgentByName(name: string | undefined | null): AgentProfile {
+  const n = normalize(name ?? "");
+  if (!n) return AGENTS[0];
+  return AGENTS.find((a) => normalize(a.name) === n) ?? AGENTS[0];
 }
 
 // ── Coordenadas de estampado (comunes a todas las plantillas) ────────────────
