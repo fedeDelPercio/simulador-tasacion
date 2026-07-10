@@ -1,26 +1,57 @@
 // Registro de agentes y su plantilla de PDF (ACM).
-// Todas las plantillas comparten la misma estructura (13 páginas, 1440×810),
-// solo cambia el branding. Por eso las coordenadas de estampado son comunes.
+// Cada agente tiene su plantilla (13 páginas, 1440×810) y un "layout" que
+// describe qué se estampa y dónde. Coordenadas en pts pdf-lib (origen abajo-izq).
+
+export interface Box {
+  pageIndex: number; // 0-based
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface AcmLayout {
+  pageW: number;
+  pageH: number;
+  comparativoPageIndex: number; // cuadro comparativo
+  coeficientesPageIndex: number; // cuadro de análisis / coeficientes
+  priceBox: Box; // recuadro donde va el valor de comercialización (texto blanco)
+  addressBox?: Box; // recuadro donde va la dirección (texto blanco) — opcional
+  photoBox?: Box; // área donde va la foto del inmueble — opcional
+}
 
 export interface AgentProfile {
   id: string;
   name: string;
   /** Nombre del archivo dentro de /plantillas-acm */
   template: string;
+  layout: AcmLayout;
 }
+
+const BASE = { pageW: 1440, pageH: 810, comparativoPageIndex: 6, coeficientesPageIndex: 7 };
 
 export const AGENTS: AgentProfile[] = [
   {
     id: "giuliano-larroca",
     name: "Giuliano Larroca",
     template: "acm-giuliano-larroca.pdf",
+    layout: {
+      ...BASE,
+      priceBox: { pageIndex: 8, x: 304, y: 263, width: 832, height: 243 },
+    },
   },
   {
     id: "cecilia-paul",
     name: "Cecilia Paul",
     template: "acm-cecilia-paul.pdf",
+    layout: {
+      ...BASE,
+      addressBox: { pageIndex: 0, x: 313, y: 237, width: 796, height: 131 },
+      priceBox: { pageIndex: 8, x: 489, y: 169, width: 461, height: 83 },
+      photoBox: { pageIndex: 8, x: 430, y: 330, width: 580, height: 420 },
+    },
   },
-  // Próximos agentes: agregar acá con su PDF en /plantillas-acm
+  // Próximos agentes: agregar acá con su PDF en /plantillas-acm y su layout
 ];
 
 export const DEFAULT_AGENT_ID = AGENTS[0].id;
@@ -43,15 +74,3 @@ export function getAgentByName(name: string | undefined | null): AgentProfile {
   if (!n) return AGENTS[0];
   return AGENTS.find((a) => normalize(a.name) === n) ?? AGENTS[0];
 }
-
-// ── Coordenadas de estampado (comunes a todas las plantillas) ────────────────
-// Índices de página (0-based) donde va cada cosa.
-export const ACM_LAYOUT = {
-  pageW: 1440,
-  pageH: 810,
-  comparativoPageIndex: 6, // página 7
-  coeficientesPageIndex: 7, // página 8
-  precioPageIndex: 8, // página 9
-  // Recuadro navy de la página 9 (coords pdf-lib, origen abajo-izquierda)
-  precioBox: { x: 304, y: 263, width: 832, height: 243 },
-} as const;

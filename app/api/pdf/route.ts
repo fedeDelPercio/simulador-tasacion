@@ -2,9 +2,10 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
 import { AcmOverlay } from "@/components/AcmOverlay";
 import type { AcmOverlayProps } from "@/components/AcmOverlay";
-import { getAgent, getAgentByName, ACM_LAYOUT } from "@/lib/agents";
+import { getAgent, getAgentByName } from "@/lib/agents";
+import type { Box } from "@/lib/agents";
 import type { Comparable, CustomCoefDef, PropertyData, PropertyType } from "@/lib/types";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, PDFPage, PDFFont, StandardFonts, rgb } from "pdf-lib";
 import fs from "fs";
 import path from "path";
 
@@ -23,6 +24,35 @@ interface PdfRequest {
 
 const WHITE = rgb(1, 1, 1);
 
+/** Dibuja texto blanco centrado dentro de un recuadro, ajustando el tamaño al ancho. */
+function drawCenteredText(
+  page: PDFPage,
+  font: PDFFont,
+  text: string,
+  box: Box,
+  maxSize: number
+) {
+  let size = maxSize;
+  while (font.widthOfTextAtSize(text, size) > box.width - 40 && size > 12) {
+    size -= 2;
+  }
+  const textWidth = font.widthOfTextAtSize(text, size);
+  page.drawText(text, {
+    x: box.x + (box.width - textWidth) / 2,
+    y: box.y + (box.height - size) / 2 + size * 0.15,
+    size,
+    font,
+    color: WHITE,
+  });
+}
+
+function dataUrlToBytes(dataUrl: string): Uint8Array | null {
+  const comma = dataUrl.indexOf(",");
+  if (comma < 0) return null;
+  const b64 = dataUrl.slice(comma + 1);
+  return Uint8Array.from(Buffer.from(b64, "base64"));
+}
+
 export async function POST(req: Request) {
   const data: PdfRequest = await req.json();
   // La plantilla se elige por el campo "Agente"; si no coincide, cae al default.
@@ -31,14 +61,17 @@ export async function POST(req: Request) {
   // Protección: si el PDF del agente todavía no está cargado, usar el default.
   let tplPath = path.join(process.cwd(), "plantillas-acm", agent.template);
   if (!fs.existsSync(tplPath)) {
-    agent = getAgent(undefined); // default (primer agente)
+    agent = getAgent(undefined);
     tplPath = path.join(process.cwd(), "plantillas-acm", agent.template);
   }
+  const layout = agent.layout;
+
   const tplBytes = fs.readFileSync(tplPath);
   const doc = await PDFDocument.load(tplBytes);
   const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);
+  const pages = doc.getPages();
 
-  // ── 2. Generar overlay (tablas) con react-pdf ─────────────────────────────
+  // ── Overlay de tablas (react-pdf) sobre las páginas de cuadros ────────────
   const overlayProps: AcmOverlayProps = {
     property: data.property,
     comparables: data.comparables,
@@ -54,53 +87,56 @@ export async function POST(req: Request) {
   const overlayDoc = await PDFDocument.load(overlayBuffer);
   const [ovComparativo, ovCoeficientes] = await doc.embedPdf(overlayDoc, [0, 1]);
 
-  // ── 3. Estampar las tablas sobre las páginas 7 y 8 ────────────────────────
-  const pages = doc.getPages();
-  const pComparativo = pages[ACM_LAYOUT.comparativoPageIndex];
-  pComparativo.drawPage(ovComparativo, {
-    x: 0,
-    y: 0,
-    width: ACM_LAYOUT.pageW,
-    height: ACM_LAYOUT.pageH,
+  pages[layout.comparativoPageIndex].drawPage(ovComparativo, {
+    x: 0, y: 0, width: layout.pageW, height: layout.pageH,
+  });
+  pages[layout.coeficientesPageIndex].drawPage(ovCoeficientes, {
+    x: 0, y: 0, width: layout.pageW, height: layout.pageH,
   });
 
-  const pCoef = pages[ACM_LAYOUT.coeficientesPageIndex];
-  pCoef.drawPage(ovCoeficientes, {
-    x: 0,
-    y: 0,
-    width: ACM_LAYOUT.pageW,
-    height: ACM_LAYOUT.pageH,
-  });
+  // ── Dirección en el recuadro de la portada (si el layout lo define) ───────
+  if (layout.addressBox) {
+    const addr = data.property?.address || "";
+    if (addr) {
+      drawCenteredText(pages[layout.addressBox.pageIndex], boldFont, addr, layout.addressBox, 32);
+    }
+  }
 
-  // ── 4. Estampar el precio en el recuadro navy de la página 9 ──────────────
+  // ── Foto del inmueble (si el layout lo define y hay foto) ─────────────────
+  if (layout.photoBox && data.property?.photo) {
+    const bytes = dataUrlToBytes(data.property.photo);
+    if (bytes) {
+      try {
+        const img = data.property.photo.includes("image/png")
+          ? await doc.embedPng(bytes)
+          : await doc.embedJpg(bytes);
+        const box = layout.photoBox;
+        // encajar preservando proporción, centrado
+        const scale = Math.min(box.width / img.width, box.height / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        pages[box.pageIndex].drawImage(img, {
+          x: box.x + (box.width - w) / 2,
+          y: box.y + (box.height - h) / 2,
+          width: w,
+          height: h,
+        });
+      } catch {
+        // si la imagen no se puede embeber, se omite
+      }
+    }
+  }
+
+  // ── Precio de comercialización en el recuadro navy ────────────────────────
   const total = Math.round(
     (data.vumAverage ?? 0) * (data.supHomInmueble ?? 0) + (data.cochera ?? 0)
   );
   const priceText = `USD ${total.toLocaleString("es-AR")}`;
-  const box = ACM_LAYOUT.precioBox;
+  drawCenteredText(pages[layout.priceBox.pageIndex], boldFont, priceText, layout.priceBox, 60);
 
-  // Ajustar el tamaño para que entre en el ancho del recuadro
-  let priceSize = 60;
-  while (
-    boldFont.widthOfTextAtSize(priceText, priceSize) > box.width - 60 &&
-    priceSize > 20
-  ) {
-    priceSize -= 2;
-  }
-  const priceWidth = boldFont.widthOfTextAtSize(priceText, priceSize);
-  const pPrecio = pages[ACM_LAYOUT.precioPageIndex];
-  pPrecio.drawText(priceText, {
-    x: box.x + (box.width - priceWidth) / 2,
-    y: box.y + (box.height - priceSize) / 2 + priceSize * 0.15,
-    size: priceSize,
-    font: boldFont,
-    color: WHITE,
-  });
-
-  // ── 5. Serializar y devolver ──────────────────────────────────────────────
+  // ── Serializar y devolver ─────────────────────────────────────────────────
   const finalBytes = await doc.save();
-  const slug =
-    (data.property?.address || "tasacion").replace(/[^a-z0-9]/gi, "-").toLowerCase();
+  const slug = (data.property?.address || "tasacion").replace(/[^a-z0-9]/gi, "-").toLowerCase();
 
   return new Response(finalBytes as unknown as BodyInit, {
     headers: {
