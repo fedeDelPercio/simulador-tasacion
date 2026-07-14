@@ -199,7 +199,23 @@ const s = StyleSheet.create({
     marginBottom: 4,
   },
   refText: { fontSize: 8.5, color: C.mid, lineHeight: 1.4 },
+  refBold: { fontFamily: "Helvetica-Bold", color: C.darker },
 });
+
+/** Renderiza una leyenda con la abreviatura en negrita: "Ub: Ubicación · ..." */
+function Legend({ items }: { items: { abbr: string; label: string }[] }) {
+  return (
+    <Text style={s.refText}>
+      {items.map((it, i) => (
+        <Text key={i}>
+          <Text style={s.refBold}>{it.abbr}</Text>
+          {`: ${it.label}`}
+          {i < items.length - 1 ? "   ·   " : ""}
+        </Text>
+      ))}
+    </Text>
+  );
+}
 
 export function AcmOverlay({
   property,
@@ -259,11 +275,14 @@ export function AcmOverlay({
   ];
 
   // Leyenda de abreviaturas de los coeficientes + columnas fijas
-  const coefLegend = customCoefDefs
-    .map((def) => `${abbrev(def.label)}: ${def.label}`)
-    .join("   ·   ");
-  const fixedLegend =
-    "S.HOM: Sup. Homogeneizada   ·   $/M²: USD por m²   ·   C.OF.: Coef. de Oferta   ·   C.TOT.: Coef. Total   ·   V.U.M.: Valor Unitario de Mercado";
+  const coefItems = customCoefDefs.map((def) => ({ abbr: abbrev(def.label), label: def.label }));
+  const fixedItems = [
+    { abbr: "S.HOM", label: "Sup. Homogeneizada" },
+    { abbr: "$/M²", label: "USD por m²" },
+    { abbr: "C.OF.", label: "Coef. de Oferta" },
+    { abbr: "C.TOT.", label: "Coef. Total" },
+    { abbr: "V.U.M.", label: "Valor Unitario de Mercado" },
+  ];
 
   return (
     <Document>
@@ -385,8 +404,8 @@ export function AcmOverlay({
 
         <View style={s.refBlock}>
           <Text style={s.refTitle}>REFERENCIAS</Text>
-          {coefLegend ? <Text style={s.refText}>{coefLegend}</Text> : null}
-          <Text style={s.refText}>{fixedLegend}</Text>
+          {coefItems.length ? <Legend items={coefItems} /> : null}
+          <Legend items={fixedItems} />
         </View>
 
         <Text style={s.note}>
