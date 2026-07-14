@@ -189,6 +189,16 @@ const s = StyleSheet.create({
   totalValue: { fontSize: 20, fontFamily: "Helvetica-Bold", color: C.white },
 
   note: { fontSize: 9, color: C.mid, fontStyle: "italic", marginTop: 12 },
+
+  refBlock: { marginTop: 16 },
+  refTitle: {
+    fontSize: 9,
+    fontFamily: "Helvetica-Bold",
+    color: C.dark,
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  refText: { fontSize: 8.5, color: C.mid, lineHeight: 1.4 },
 });
 
 export function AcmOverlay({
@@ -247,6 +257,13 @@ export function AcmOverlay({
     { label: "Precio", subject: "—", getComp: (c) => (c.precio ? `USD ${c.precio.toLocaleString("es-AR")}` : "—") },
     { label: "Cochera", subject: "—", getComp: (c) => (c.cochera ? `USD ${c.cochera.toLocaleString("es-AR")}` : "—") },
   ];
+
+  // Leyenda de abreviaturas de los coeficientes + columnas fijas
+  const coefLegend = customCoefDefs
+    .map((def) => `${abbrev(def.label)}: ${def.label}`)
+    .join("   ·   ");
+  const fixedLegend =
+    "S.HOM: Sup. Homogeneizada   ·   $/M²: USD por m²   ·   C.OF.: Coef. de Oferta   ·   C.TOT.: Coef. Total   ·   V.U.M.: Valor Unitario de Mercado";
 
   return (
     <Document>
@@ -366,9 +383,16 @@ export function AcmOverlay({
           </View>
         </View>
 
+        <View style={s.refBlock}>
+          <Text style={s.refTitle}>REFERENCIAS</Text>
+          {coefLegend ? <Text style={s.refText}>{coefLegend}</Text> : null}
+          <Text style={s.refText}>{fixedLegend}</Text>
+        </View>
+
         <Text style={s.note}>
-          Homogenizo pensando como es el bien a tasar con respecto al comparable
-          (=1 equivalente · &gt;1 el tasado es superior · &lt;1 el tasado es inferior)
+          Los coeficientes de homogeneización representan cómo es el inmueble
+          tasado con respecto a cada comparable: =1 equivalente, &gt;1 el tasado
+          es superior al comparable, &lt;1 el tasado es inferior al comparable.
         </Text>
       </Page>
     </Document>
