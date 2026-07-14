@@ -5,7 +5,7 @@ import type { AcmOverlayProps } from "@/components/AcmOverlay";
 import { getAgent, getAgentByName } from "@/lib/agents";
 import type { Box } from "@/lib/agents";
 import type { Comparable, CustomCoefDef, PropertyData, PropertyType } from "@/lib/types";
-import { PDFDocument, PDFPage, PDFFont, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, PDFPage, PDFFont, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import fs from "fs";
 import path from "path";
@@ -70,7 +70,6 @@ export async function POST(req: Request) {
   const tplBytes = fs.readFileSync(tplPath);
   const doc = await PDFDocument.load(tplBytes);
   doc.registerFontkit(fontkit);
-  const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);
   // Cormorant Garamond (misma tipografía que los títulos de la plantilla)
   const cormorantBytes = fs.readFileSync(
     path.join(process.cwd(), "fonts", "CormorantGaramond-SemiBold.ttf")
@@ -139,7 +138,7 @@ export async function POST(req: Request) {
     (data.vumAverage ?? 0) * (data.supHomInmueble ?? 0) + (data.cochera ?? 0)
   );
   const priceText = `USD ${total.toLocaleString("es-AR")}`;
-  drawCenteredText(pages[layout.priceBox.pageIndex], boldFont, priceText, layout.priceBox, 60);
+  drawCenteredText(pages[layout.priceBox.pageIndex], cormorant, priceText, layout.priceBox, 60);
 
   // ── Serializar y devolver ─────────────────────────────────────────────────
   const finalBytes = await doc.save();
