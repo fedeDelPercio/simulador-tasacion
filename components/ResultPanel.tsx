@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { AppAction, Comparable, PropertyType, SurfaceCoefs } from "@/lib/types";
 import { PROPERTY_TYPE_LABELS, PROPERTY_TYPE_VALOR_LABEL } from "@/lib/types";
-import { calcComparableDerived, calcValorTotal, formatNumber } from "@/lib/calculations";
+import { calcComparableDerived, calcValorTotal, formatNumber, formatMoney } from "@/lib/calculations";
 import { ValidationAlert } from "./ValidationAlert";
 
 // Diferencia máxima admitida entre el VUM más alto y el más bajo de los comparables
@@ -97,7 +97,7 @@ export function ResultPanel({
               V.U.M. Promedio
             </p>
             <p className="text-2xl font-bold text-brand-950">
-              ${formatNumber(vumAverage)}
+              U$S {formatMoney(vumAverage)}
             </p>
             <p className="text-xs text-neutral-600 mt-1">USD/m²</p>
           </div>
@@ -107,10 +107,10 @@ export function ResultPanel({
               {PROPERTY_TYPE_VALOR_LABEL[propertyType]}
             </p>
             <p className="text-2xl font-bold text-brand-950">
-              ${formatNumber(valorDepto)}
+              U$S {formatMoney(valorDepto)}
             </p>
             <p className="text-xs text-neutral-600 mt-1">
-              {formatNumber(vumAverage)} × {formatNumber(supHomInmueble)} m²
+              U$S {formatMoney(vumAverage)} × {formatNumber(supHomInmueble)} m²
             </p>
           </div>
         </div>
@@ -168,7 +168,7 @@ export function ResultPanel({
 
           {editingValor ? (
             <div className="flex items-center gap-2">
-              <span className="text-3xl font-bold">$</span>
+              <span className="text-3xl font-bold">U$S</span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -196,14 +196,14 @@ export function ResultPanel({
             </div>
           ) : (
             <p className="text-4xl font-bold tracking-tight">
-              ${formatNumber(valorTotal)}
+              U$S {formatMoney(valorTotal)}
             </p>
           )}
           <p className="text-white/40 text-xs mt-1">USD</p>
 
           {isOverridden && !editingValor && (
             <p className="text-white/50 text-xs mt-2">
-              Editado manualmente · Calculado: ${formatNumber(valorCalculado)} ·{" "}
+              Editado manualmente · Calculado: U$S {formatMoney(valorCalculado)} ·{" "}
               <button
                 onClick={() => dispatch({ type: "SET_VALOR_OVERRIDE", value: null })}
                 className="underline hover:text-white/80"
@@ -217,11 +217,11 @@ export function ResultPanel({
             <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-1.5 text-xs text-white/50">
               <div className="flex justify-between">
                 <span>{PROPERTY_TYPE_LABELS[propertyType]}</span>
-                <span className="font-medium text-white/70">${formatNumber(valorDepto)}</span>
+                <span className="font-medium text-white/70">U$S {formatMoney(valorDepto)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Cochera</span>
-                <span className="font-medium text-white/70">${formatNumber(cochera)}</span>
+                <span className="font-medium text-white/70">U$S {formatMoney(cochera)}</span>
               </div>
             </div>
           )}

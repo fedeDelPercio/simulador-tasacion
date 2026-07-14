@@ -8,7 +8,7 @@ import type {
   SurfaceCoefs,
 } from "@/lib/types";
 import { PROPERTY_TYPE_LABELS } from "@/lib/types";
-import { calcComparableDerived, calcValorTotal, formatNumber } from "@/lib/calculations";
+import { calcComparableDerived, calcValorTotal, formatNumber, formatMoney } from "@/lib/calculations";
 
 export interface AcmOverlayProps {
   property: PropertyData;
@@ -19,6 +19,7 @@ export interface AcmOverlayProps {
   supHomInmueble: number;
   vumAverage: number;
   cochera: number;
+  valorOverride?: number | null;
 }
 
 const C = {
@@ -226,9 +227,11 @@ export function AcmOverlay({
   supHomInmueble,
   vumAverage,
   cochera,
+  valorOverride,
 }: AcmOverlayProps) {
   const typeLabel = PROPERTY_TYPE_LABELS[propertyType].toUpperCase();
-  const valorTotal = calcValorTotal(vumAverage, supHomInmueble, cochera);
+  const valorTotal =
+    valorOverride != null ? valorOverride : calcValorTotal(vumAverage, supHomInmueble, cochera);
 
   // Anchos ficha
   const fichaSubjectW = 16;
@@ -270,8 +273,8 @@ export function AcmOverlay({
     { label: "Dormitorios", subject: property.dormitorios ? String(property.dormitorios) : "—", getComp: (c) => (c.dormitorios ? String(c.dormitorios) : "—") },
     { label: "Baños", subject: property.banos ? String(property.banos) : "—", getComp: (c) => (c.banos ? String(c.banos) : "—") },
     { label: "Toilete", subject: property.toilete ? String(property.toilete) : "—", getComp: (c) => (c.toilete ? String(c.toilete) : "—") },
-    { label: "Precio", subject: "—", getComp: (c) => (c.precio ? `USD ${c.precio.toLocaleString("es-AR")}` : "—") },
-    { label: "Cochera", subject: "—", getComp: (c) => (c.cochera ? `USD ${c.cochera.toLocaleString("es-AR")}` : "—") },
+    { label: "Precio", subject: "—", getComp: (c) => (c.precio ? `U$S ${formatMoney(c.precio)}` : "—") },
+    { label: "Cochera", subject: "—", getComp: (c) => (c.cochera ? `U$S ${formatMoney(c.cochera)}` : "—") },
   ];
 
   // Leyenda de abreviaturas de los coeficientes + columnas fijas
@@ -375,9 +378,9 @@ export function AcmOverlay({
                 <Text style={[cell, ColW(w.ubic), { textAlign: "left", paddingHorizontal: 5 }]}>
                   {c.ubicacion || "—"}
                 </Text>
-                <Text style={[cell, ColW(w.precio)]}>{c.precio ? `$${c.precio.toLocaleString("es-AR")}` : "—"}</Text>
+                <Text style={[cell, ColW(w.precio)]}>{c.precio ? `U$S ${formatMoney(c.precio)}` : "—"}</Text>
                 <Text style={[cell, ColW(w.supHom)]}>{isValid ? formatNumber(supHom) : "—"}</Text>
-                <Text style={[cell, ColW(w.usdM2)]}>{isValid ? `$${formatNumber(valorM2)}` : "—"}</Text>
+                <Text style={[cell, ColW(w.usdM2)]}>{isValid ? `$${formatMoney(valorM2)}` : "—"}</Text>
                 {customCoefDefs.map((def) => (
                   <Text key={def.id} style={[cell, ColW(w.coef), { color: C.mid }]}>
                     {fmtCoef(c.customCoefs[def.id] ?? 1)}
@@ -385,7 +388,7 @@ export function AcmOverlay({
                 ))}
                 <Text style={[cell, ColW(w.oferta)]}>{fmtCoef(c.coefOferta)}</Text>
                 <Text style={[s.calcCellBold, ColW(w.total)]}>{isValid ? formatNumber(coefTotal, 4) : "—"}</Text>
-                <Text style={[s.calcCellBold, ColW(w.vum), { borderRight: "none" }]}>{isValid ? `$${formatNumber(vum)}` : "—"}</Text>
+                <Text style={[s.calcCellBold, ColW(w.vum), { borderRight: "none" }]}>{isValid ? `U$S ${formatMoney(vum)}` : "—"}</Text>
               </View>
             );
           })}
@@ -394,11 +397,11 @@ export function AcmOverlay({
         <View style={s.totalRow}>
           <View style={s.totalBox}>
             <Text style={s.totalLabel}>M² UNITARIO PROMEDIO</Text>
-            <Text style={s.totalValue}>${formatNumber(vumAverage)}</Text>
+            <Text style={s.totalValue}>U$S {formatMoney(vumAverage)}</Text>
           </View>
           <View style={s.totalBox}>
             <Text style={s.totalLabel}>VALOR TOTAL</Text>
-            <Text style={s.totalValue}>${formatNumber(valorTotal)}</Text>
+            <Text style={s.totalValue}>U$S {formatMoney(valorTotal)}</Text>
           </View>
         </View>
 

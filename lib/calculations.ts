@@ -81,6 +81,15 @@ export function formatNumber(value: number, decimals = 2): string {
   }).format(value);
 }
 
+// Montos en pesos/USD: estilo argentino, sin decimales, punto para miles.
+// Ej: 210000 -> "210.000"
+export function formatMoney(value: number): string {
+  if (!isFinite(value) || isNaN(value)) return "0";
+  return new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(
+    Math.round(value)
+  );
+}
+
 // ─── Validación dormitorios vs ambientes ──────────────────────────────────────
 // Los ambientes incluyen los dormitorios + estares. Solo el monoambiente
 // (1 amb / 1 dorm) puede tener igual cantidad; desde 2 dormitorios, los

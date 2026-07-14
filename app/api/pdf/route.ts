@@ -89,6 +89,7 @@ export async function POST(req: Request) {
     supHomInmueble: data.supHomInmueble,
     vumAverage: data.vumAverage,
     cochera: data.cochera,
+    valorOverride: data.valorOverride,
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overlayBuffer = await renderToBuffer(React.createElement(AcmOverlay, overlayProps) as any);
@@ -141,7 +142,7 @@ export async function POST(req: Request) {
       ? data.valorOverride
       : (data.vumAverage ?? 0) * (data.supHomInmueble ?? 0) + (data.cochera ?? 0)
   );
-  const priceText = `USD ${total.toLocaleString("es-AR")}`;
+  const priceText = `U$S ${total.toLocaleString("es-AR")}`;
   drawCenteredText(pages[layout.priceBox.pageIndex], cormorant, priceText, layout.priceBox, 60);
 
   // ── Serializar y devolver ─────────────────────────────────────────────────

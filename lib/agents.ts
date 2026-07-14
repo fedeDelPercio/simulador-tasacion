@@ -30,6 +30,14 @@ export interface AgentProfile {
 
 const BASE = { pageW: 1440, pageH: 810, comparativoPageIndex: 6, coeficientesPageIndex: 7 };
 
+// Layout compartido: dirección en portada (pág 1) + foto y precio en pág 9.
+const LAYOUT_PORTADA_FOTO: AcmLayout = {
+  ...BASE,
+  addressBox: { pageIndex: 0, x: 313, y: 237, width: 796, height: 131 },
+  priceBox: { pageIndex: 8, x: 489, y: 169, width: 461, height: 83 },
+  photoBox: { pageIndex: 8, x: 430, y: 330, width: 580, height: 420 },
+};
+
 export const AGENTS: AgentProfile[] = [
   {
     id: "giuliano-larroca",
@@ -44,12 +52,13 @@ export const AGENTS: AgentProfile[] = [
     id: "cecilia-paul",
     name: "Cecilia Paul",
     template: "acm-cecilia-paul.pdf",
-    layout: {
-      ...BASE,
-      addressBox: { pageIndex: 0, x: 313, y: 237, width: 796, height: 131 },
-      priceBox: { pageIndex: 8, x: 489, y: 169, width: 461, height: 83 },
-      photoBox: { pageIndex: 8, x: 430, y: 330, width: 580, height: 420 },
-    },
+    layout: LAYOUT_PORTADA_FOTO,
+  },
+  {
+    id: "luciano-perez",
+    name: "Luciano Perez",
+    template: "acm-luciano-perez.pdf",
+    layout: LAYOUT_PORTADA_FOTO,
   },
   // Próximos agentes: agregar acá con su PDF en /plantillas-acm y su layout
 ];
