@@ -23,6 +23,8 @@ export interface AcmLayout {
 export interface AgentProfile {
   id: string;
   name: string;
+  /** Nombre a mostrar en el PDF exportado (si difiere del nombre del sistema) */
+  pdfName?: string;
   /** Nombre del archivo dentro de /plantillas-acm */
   template: string;
   layout: AcmLayout;
@@ -41,7 +43,7 @@ const LAYOUT_PORTADA_FOTO: AcmLayout = {
 export const AGENTS: AgentProfile[] = [
   { id: "giuliano-larroca", name: "Giuliano Larroca", template: "acm-giuliano-larroca.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "cecilia-paul", name: "Cecilia Paul", template: "acm-cecilia-paul.pdf", layout: LAYOUT_PORTADA_FOTO },
-  { id: "luciano-perez", name: "Luciano Perez", template: "acm-luciano-perez.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "luciano-perez", name: "Luciano Perez", pdfName: "Luciano Perez Mango", template: "acm-luciano-perez.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "carolina-klachko", name: "Carolina Klachko", template: "acm-carolina-klachko.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "federico-susemihl", name: "Federico Susemihl", template: "acm-federico-susemihl.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "irene-ruiz-diaz", name: "Irene Ruiz Diaz", template: "acm-irene-ruiz-diaz.pdf", layout: LAYOUT_PORTADA_FOTO },

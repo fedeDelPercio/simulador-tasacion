@@ -90,6 +90,7 @@ export async function POST(req: Request) {
     vumAverage: data.vumAverage,
     cochera: data.cochera,
     valorOverride: data.valorOverride,
+    agentName: agent.pdfName ?? agent.name,
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const overlayBuffer = await renderToBuffer(React.createElement(AcmOverlay, overlayProps) as any);

@@ -20,6 +20,8 @@ export interface AcmOverlayProps {
   vumAverage: number;
   cochera: number;
   valorOverride?: number | null;
+  /** Nombre del agente a mostrar en el PDF (puede diferir del nombre del sistema) */
+  agentName?: string;
 }
 
 const C = {
@@ -137,6 +139,19 @@ const s = StyleSheet.create({
     textAlign: "center",
     backgroundColor: C.bg2,
   },
+  // Columna del bien a tasar: tinte azulado + negrita para remarcarla
+  cellSubject: {
+    fontSize: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+    borderRight: `1px solid #b9c6dd`,
+    borderLeft: `1px solid #b9c6dd`,
+    borderBottom: `1px solid #b9c6dd`,
+    textAlign: "center",
+    backgroundColor: "#dbe3f2",
+    fontFamily: "Helvetica-Bold",
+    color: C.darker,
+  },
   calcCell: {
     fontSize: 9,
     paddingVertical: 6,
@@ -228,6 +243,7 @@ export function AcmOverlay({
   vumAverage,
   cochera,
   valorOverride,
+  agentName,
 }: AcmOverlayProps) {
   const typeLabel = PROPERTY_TYPE_LABELS[propertyType].toUpperCase();
   const valorTotal =
@@ -277,13 +293,20 @@ export function AcmOverlay({
     { label: "Cochera", subject: "—", getComp: (c) => (c.cochera ? `U$S ${formatMoney(c.cochera)}` : "—") },
   ];
 
+  // Descripciones completas para las etiquetas que están abreviadas
+  const COEF_DESC: Record<string, string> = {
+    "Ub. Edificio": "Ubicación en el edificio",
+  };
   // Leyenda de abreviaturas de los coeficientes + columnas fijas
-  const coefItems = customCoefDefs.map((def) => ({ abbr: abbrev(def.label), label: def.label }));
+  const coefItems = customCoefDefs.map((def) => ({
+    abbr: abbrev(def.label),
+    label: COEF_DESC[def.label] ?? def.label,
+  }));
   const fixedItems = [
-    { abbr: "S.HOM", label: "Sup. Homogeneizada" },
+    { abbr: "S.HOM", label: "Superficie Homogeneizada" },
     { abbr: "$/M²", label: "USD por m²" },
-    { abbr: "C.OF.", label: "Coef. de Oferta" },
-    { abbr: "C.TOT.", label: "Coef. Total" },
+    { abbr: "C.OF.", label: "Coeficiente de oferta" },
+    { abbr: "C.TOT.", label: "Coeficiente total" },
     { abbr: "V.U.M.", label: "Valor Unitario de Mercado" },
   ];
 
@@ -309,7 +332,7 @@ export function AcmOverlay({
           {fichaRows.map((rowDef, i) => (
             <View key={rowDef.label} style={s.row}>
               <Text style={[s.cellLabel, ColW(fichaSubjectW)]}>{rowDef.label}</Text>
-              <Text style={[i % 2 === 0 ? s.cellData : s.cellDataAlt, ColW(fichaSubjectW)]}>
+              <Text style={[s.cellSubject, ColW(fichaSubjectW)]}>
                 {rowDef.subject}
               </Text>
               {comparables.map((c) => (
@@ -344,7 +367,7 @@ export function AcmOverlay({
           </View>
           <View style={s.infoItem}>
             <Text style={s.infoLabel}>AGENTE</Text>
-            <Text style={s.infoValue}>{property.agent || "—"}</Text>
+            <Text style={s.infoValue}>{agentName || property.agent || "—"}</Text>
           </View>
           <View style={s.infoItem}>
             <Text style={s.infoLabel}>FECHA</Text>
