@@ -40,6 +40,7 @@ const LAYOUT_PORTADA_FOTO: AcmLayout = {
 
 export const AGENTS: AgentProfile[] = [
   {
+    // Layout viejo (portada con dirección hardcodeada, sin foto). Pendiente re-subir.
     id: "giuliano-larroca",
     name: "Giuliano Larroca",
     template: "acm-giuliano-larroca.pdf",
@@ -48,19 +49,13 @@ export const AGENTS: AgentProfile[] = [
       priceBox: { pageIndex: 8, x: 304, y: 263, width: 832, height: 243 },
     },
   },
-  {
-    id: "cecilia-paul",
-    name: "Cecilia Paul",
-    template: "acm-cecilia-paul.pdf",
-    layout: LAYOUT_PORTADA_FOTO,
-  },
-  {
-    id: "luciano-perez",
-    name: "Luciano Perez",
-    template: "acm-luciano-perez.pdf",
-    layout: LAYOUT_PORTADA_FOTO,
-  },
-  // Próximos agentes: agregar acá con su PDF en /plantillas-acm y su layout
+  { id: "cecilia-paul", name: "Cecilia Paul", template: "acm-cecilia-paul.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "luciano-perez", name: "Luciano Perez", template: "acm-luciano-perez.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "carolina-klachko", name: "Carolina Klachko", template: "acm-carolina-klachko.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "federico-susemihl", name: "Federico Susemihl", template: "acm-federico-susemihl.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "irene-ruiz-diaz", name: "Irene Ruiz Diaz", template: "acm-irene-ruiz-diaz.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "romina-garfunkel", name: "Romina Garfunkel", template: "acm-romina-garfunkel.pdf", layout: LAYOUT_PORTADA_FOTO },
+  { id: "talia-larroca", name: "Talia Larroca", template: "acm-talia-larroca.pdf", layout: LAYOUT_PORTADA_FOTO },
 ];
 
 export const DEFAULT_AGENT_ID = AGENTS[0].id;
