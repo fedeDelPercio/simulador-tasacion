@@ -2,6 +2,7 @@
 
 import type { AppAction, PropertyData, PropertyType } from "@/lib/types";
 import { PROPERTY_TYPE_LABELS } from "@/lib/types";
+import { AGENTS } from "@/lib/agents";
 
 interface HeaderProps {
   property: PropertyData;
@@ -50,15 +51,37 @@ export function Header({ property, propertyType, dispatch }: HeaderProps) {
           <label className="text-xs font-medium text-neutral-700">
             Agente <span className="text-red-400">*</span>
           </label>
-          <input
-            type="text"
-            value={property.agent}
-            onChange={(e) =>
-              dispatch({ type: "UPDATE_PROPERTY", payload: { agent: e.target.value } })
-            }
-            placeholder="Nombre del agente inmobiliario"
-            className="px-3 py-2 border border-neutral-200 rounded-lg text-sm text-neutral-800 placeholder-neutral-300 focus:outline-none focus:ring-2 focus:ring-brand-800 focus:border-transparent transition"
-          />
+          <div className="relative">
+            <select
+              value={property.agent}
+              onChange={(e) =>
+                dispatch({ type: "UPDATE_PROPERTY", payload: { agent: e.target.value } })
+              }
+              className={`w-full appearance-none px-3 py-2 pr-8 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-800 focus:border-transparent transition bg-white cursor-pointer ${
+                property.agent ? "text-neutral-800" : "text-neutral-400"
+              }`}
+            >
+              <option value="" disabled>
+                Seleccioná un agente
+              </option>
+              {[...AGENTS]
+                .sort((a, b) => a.name.localeCompare(b.name, "es"))
+                .map((a) => (
+                  <option key={a.id} value={a.name} className="text-neutral-800">
+                    {a.name}
+                  </option>
+                ))}
+            </select>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
         </div>
 
         {/* Property type */}

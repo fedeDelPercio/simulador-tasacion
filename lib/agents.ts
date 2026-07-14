@@ -39,16 +39,7 @@ const LAYOUT_PORTADA_FOTO: AcmLayout = {
 };
 
 export const AGENTS: AgentProfile[] = [
-  {
-    // Layout viejo (portada con dirección hardcodeada, sin foto). Pendiente re-subir.
-    id: "giuliano-larroca",
-    name: "Giuliano Larroca",
-    template: "acm-giuliano-larroca.pdf",
-    layout: {
-      ...BASE,
-      priceBox: { pageIndex: 8, x: 304, y: 263, width: 832, height: 243 },
-    },
-  },
+  { id: "giuliano-larroca", name: "Giuliano Larroca", template: "acm-giuliano-larroca.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "cecilia-paul", name: "Cecilia Paul", template: "acm-cecilia-paul.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "luciano-perez", name: "Luciano Perez", template: "acm-luciano-perez.pdf", layout: LAYOUT_PORTADA_FOTO },
   { id: "carolina-klachko", name: "Carolina Klachko", template: "acm-carolina-klachko.pdf", layout: LAYOUT_PORTADA_FOTO },
