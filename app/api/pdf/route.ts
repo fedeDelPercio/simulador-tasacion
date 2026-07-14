@@ -20,6 +20,7 @@ interface PdfRequest {
   supHomInmueble: number;
   vumAverage: number;
   cochera: number;
+  valorOverride?: number | null;
   agentId?: string;
 }
 
@@ -40,7 +41,8 @@ function drawCenteredText(
   const textWidth = font.widthOfTextAtSize(text, size);
   page.drawText(text, {
     x: box.x + (box.width - textWidth) / 2,
-    y: box.y + (box.height - size) / 2 + size * 0.15,
+    // 0.28 centra la mediana del texto (Cormorant usa números "old-style")
+    y: box.y + (box.height - size) / 2 + size * 0.28,
     size,
     font,
     color: WHITE,
@@ -135,7 +137,9 @@ export async function POST(req: Request) {
 
   // ── Precio de comercialización en el recuadro navy ────────────────────────
   const total = Math.round(
-    (data.vumAverage ?? 0) * (data.supHomInmueble ?? 0) + (data.cochera ?? 0)
+    data.valorOverride != null
+      ? data.valorOverride
+      : (data.vumAverage ?? 0) * (data.supHomInmueble ?? 0) + (data.cochera ?? 0)
   );
   const priceText = `USD ${total.toLocaleString("es-AR")}`;
   drawCenteredText(pages[layout.priceBox.pageIndex], cormorant, priceText, layout.priceBox, 60);

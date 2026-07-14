@@ -114,6 +114,8 @@ export interface AppState {
   showParametros: boolean;
   customCoefDefs: CustomCoefDef[];
   propertyType: PropertyType;
+  /** Valor Sugerido editado manualmente por el agente. null = usar el calculado. */
+  valorOverride: number | null;
 }
 
 // ─── Actions ─────────────────────────────────────────────────────────────────
@@ -129,7 +131,8 @@ export type AppAction =
   | { type: "TOGGLE_COMPARABLE_COEFS"; id: string }
   | { type: "ADD_CUSTOM_COEF"; label: string }
   | { type: "REMOVE_CUSTOM_COEF"; id: string }
-  | { type: "SET_PROPERTY_TYPE"; propertyType: PropertyType };
+  | { type: "SET_PROPERTY_TYPE"; propertyType: PropertyType }
+  | { type: "SET_VALOR_OVERRIDE"; value: number | null };
 
 // ─── Defaults ────────────────────────────────────────────────────────────────
 export const DEFAULT_SURFACE_COEFS: SurfaceCoefs = {
@@ -193,4 +196,5 @@ export const INITIAL_STATE: AppState = {
   showParametros: false,
   customCoefDefs: [...PROPERTY_TYPE_COEF_PRESETS[INITIAL_PROPERTY_TYPE]],
   propertyType: INITIAL_PROPERTY_TYPE,
+  valorOverride: null,
 };

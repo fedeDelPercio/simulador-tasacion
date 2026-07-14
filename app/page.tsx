@@ -115,6 +115,9 @@ function reducer(state: AppState, action: AppAction): AppState {
       };
     }
 
+    case "SET_VALOR_OVERRIDE":
+      return { ...state, valorOverride: action.value };
+
     default:
       return state;
   }
@@ -138,6 +141,7 @@ export default function SimuladorPage() {
           supHomInmueble,
           vumAverage,
           cochera,
+          valorOverride: state.valorOverride,
         }),
       });
       const blob = await res.blob();
@@ -151,7 +155,7 @@ export default function SimuladorPage() {
       setExportingPDF(false);
     }
   }
-  const { property, comparables, cochera, showParametros, customCoefDefs, propertyType } = state;
+  const { property, comparables, cochera, showParametros, customCoefDefs, propertyType, valorOverride } = state;
 
   const supHomInmueble = calcSupHomogeneizada(
     property.supCubierta,
@@ -317,6 +321,7 @@ export default function SimuladorPage() {
             cochera={cochera}
             vumAverage={vumAverage}
             propertyType={propertyType}
+            valorOverride={valorOverride}
             dispatch={dispatch}
           />
         )}
