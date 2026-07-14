@@ -6,6 +6,7 @@ import { getAgent, getAgentByName } from "@/lib/agents";
 import type { Box } from "@/lib/agents";
 import type { Comparable, CustomCoefDef, PropertyData, PropertyType } from "@/lib/types";
 import { PDFDocument, PDFPage, PDFFont, StandardFonts, rgb } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
 import fs from "fs";
 import path from "path";
 
@@ -68,7 +69,13 @@ export async function POST(req: Request) {
 
   const tplBytes = fs.readFileSync(tplPath);
   const doc = await PDFDocument.load(tplBytes);
+  doc.registerFontkit(fontkit);
   const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);
+  // Cormorant Garamond (misma tipografía que los títulos de la plantilla)
+  const cormorantBytes = fs.readFileSync(
+    path.join(process.cwd(), "fonts", "CormorantGaramond-SemiBold.ttf")
+  );
+  const cormorant = await doc.embedFont(cormorantBytes);
   const pages = doc.getPages();
 
   // ── Overlay de tablas (react-pdf) sobre las páginas de cuadros ────────────
@@ -98,7 +105,7 @@ export async function POST(req: Request) {
   if (layout.addressBox) {
     const addr = data.property?.address || "";
     if (addr) {
-      drawCenteredText(pages[layout.addressBox.pageIndex], boldFont, addr, layout.addressBox, 32);
+      drawCenteredText(pages[layout.addressBox.pageIndex], cormorant, addr, layout.addressBox, 40);
     }
   }
 
