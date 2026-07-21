@@ -199,8 +199,9 @@ const s = StyleSheet.create({
   infoLabel: { fontSize: 9, color: C.mid },
   infoValue: { fontSize: 11, fontFamily: "Helvetica-Bold" },
 
-  totalRow: { flexDirection: "row", justifyContent: "flex-end", marginTop: 14, gap: 12 },
-  totalBox: { backgroundColor: C.dark, paddingVertical: 12, paddingHorizontal: 18, minWidth: 220, alignItems: "center" },
+  totalRow: { flexDirection: "row", justifyContent: "flex-end", marginTop: 14, gap: 10 },
+  totalBox: { backgroundColor: C.dark, paddingVertical: 12, paddingHorizontal: 16, minWidth: 195, alignItems: "center" },
+  totalBoxFinal: { backgroundColor: C.darker, paddingVertical: 12, paddingHorizontal: 16, minWidth: 210, alignItems: "center", border: `2px solid #b9c6dd` },
   totalLabel: { fontSize: 9, color: "#c7d0dd", letterSpacing: 1, marginBottom: 4 },
   totalValue: { fontSize: 20, fontFamily: "Helvetica-Bold", color: C.white },
 
@@ -246,6 +247,7 @@ export function AcmOverlay({
   agentName,
 }: AcmOverlayProps) {
   const typeLabel = PROPERTY_TYPE_LABELS[propertyType].toUpperCase();
+  const valorDepto = vumAverage * supHomInmueble;
   const valorTotal =
     valorOverride != null ? valorOverride : calcValorTotal(vumAverage, supHomInmueble, cochera);
 
@@ -423,6 +425,16 @@ export function AcmOverlay({
             <Text style={s.totalValue}>U$S {formatMoney(vumAverage)}</Text>
           </View>
           <View style={s.totalBox}>
+            <Text style={s.totalLabel}>VALOR {typeLabel}</Text>
+            <Text style={s.totalValue}>U$S {formatMoney(valorDepto)}</Text>
+          </View>
+          {cochera > 0 && (
+            <View style={s.totalBox}>
+              <Text style={s.totalLabel}>COCHERA</Text>
+              <Text style={s.totalValue}>U$S {formatMoney(cochera)}</Text>
+            </View>
+          )}
+          <View style={s.totalBoxFinal}>
             <Text style={s.totalLabel}>VALOR TOTAL</Text>
             <Text style={s.totalValue}>U$S {formatMoney(valorTotal)}</Text>
           </View>
