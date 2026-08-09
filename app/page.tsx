@@ -10,8 +10,13 @@ import { ParametrosPanel } from "@/components/ParametrosPanel";
 import { ComparableCard } from "@/components/ComparableCard";
 import { ComparisonTable } from "@/components/ComparisonTable";
 import { ResultPanel } from "@/components/ResultPanel";
+import { BlockedScreen } from "@/components/BlockedScreen";
 
 const MAX_COMPARABLES = 10;
+
+// Bloqueo de esta URL pública (el ACM se usa desde la plataforma de Team Scaglia).
+// Poner en false para reactivar el tasador en esta URL.
+const PAGE_BLOCKED = true;
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -126,6 +131,9 @@ function reducer(state: AppState, action: AppAction): AppState {
 export default function SimuladorPage() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [exportingPDF, setExportingPDF] = React.useState(false);
+
+  // Página bloqueada: mostrar cartel y no renderizar el tasador.
+  if (PAGE_BLOCKED) return <BlockedScreen />;
 
   async function handleExportPDF() {
     setExportingPDF(true);
